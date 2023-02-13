@@ -13,8 +13,8 @@ if(empty($id)){
 
     //Verifica se há motoristas com o id informado
     if($response -> num_rows > 0){
-        foreach($response as $row){
-            $rows[] = $row;
+        foreach($response as $r){
+            $rows[] = $r;
         }
         echo json_encode($rows);
     }else{

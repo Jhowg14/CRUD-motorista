@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">CPF</label>
-                    <input class="form-control" id="cpf" type="text" placeholder="Insira o CPF(somente números)"pattern="[0-9][11]" required/>
+                    <input class="form-control" id="cpf" type="text" placeholder="Insira o CPF(somente números)"pattern="[0-9][11]" autocomplete="off" maxlength="14" required/>
                 </div>
                 <div class="col-md-12">
                     <label class="form-label">Endereço</label>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Telefone</label>
-                    <input class="form-control" id="telefone" type="text" />
+                    <input class="form-control" id="telefone" type="text" maxlength="14"/>
                 </div>
                 <div class="col-md-6">
                     <input 
@@ -55,6 +55,6 @@
         </div>
     </div>
     <script src="../scripts/cadastro.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>
