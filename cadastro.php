@@ -13,7 +13,8 @@ $telefone=$_POST['telefone'];
 if(empty($nome) || empty($cpf) || empty($endereco) ||empty($veiculo) || empty($telefone)){
     echo json_encode(["message"=>"Preencha todos os campos"]);
 }else{
-    $str = "SELECT * FROM motoristas WHERE cpf = '$cpf'";
+    // Verifica se o CPF já está cadastrado
+    $str = "SELECT * FROM motoristas WHERE cpf = '$cpf' and excluido = false";
     $response = $connection -> query($str);
 
     //

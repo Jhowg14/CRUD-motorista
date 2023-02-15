@@ -28,30 +28,77 @@
               <div class="row g-3">
                   <div class="col-md-6">
                       <label for="" class="form-label">Nome</label>
-                      <input class="form-control" id="nome" type="text" />
+                      <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva"/>
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">CPF</label>
-                      <input class="form-control" id="cpf" type="text" placeholder="Insira o CPF"pattern="[0-9][11]" autocomplete="off" maxlength="14" required/>
+                      <input class="form-control" id="cpf" type="text" placeholder="Insira somente números"pattern="[0-9][11]" autocomplete="off" maxlength="14" required/>
                   </div>
                   <div class="col-md-12">
                       <label class="form-label">Endereço</label>
-                      <input class="form-control" id="endereco" type="text"/>   
+                      <input class="form-control" id="endereco" type="text" placeholder="Ex: Avenida Jose Bueno 680"/>   
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Veiculo</label>
-                      <input class="form-control" id="veiculo" type="text" />
+                      <input class="form-control" id="veiculo" type="text" placeholder="Ex: Trator de Esteira"/>
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Telefone</label>
-                      <input class="form-control" id="telefone" type="text" maxlength="14"/>
+                      <input class="form-control" id="telefone" type="text" maxlength="14" placeholder="Número com DDD"/>
                   </div>
               </div>
               </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            <button type="button" onclick= "showData()" class="btn btn-danger" data-dismiss="modal">Fechar</button>
             <button type="button" onclick= "createUser()" class="btn btn-primary">Cadastrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Modal-->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          <div class="card-header bg-secondary">
+            <h5 style="color:#fff">Editar Motorista</h5>
+            </div>
+            <div class="card p-2">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <input class="form-control" id="id" type="text" hidden />
+                  <label for="" class="form-label">Nome</label>
+                  <input class="form-control" id="nome-1" type="text" />
+              </div>
+              <div class="col-md-6">
+                  <label class="form-label">CPF</label>
+                  <input class="form-control" id="cpf-1" type="text" autocomplete="off" maxlenght="14" required />
+              </div>
+              <div class="col-md-12">
+                  <label class="form-label">Endereço</label>
+                  <input class="form-control" id="endereco-1" type="text"/>   
+              </div>
+              <div class="col-md-6">
+                  <label class="form-label">Veiculo</label>
+                  <input class="form-control" id="veiculo-1" type="text" />
+              </div>
+              <div class="col-md-6">
+                  <label class="form-label">Telefone</label>
+                  <input class="form-control" id="telefone-1" type="text" maxlenght="14"/>
+                </div>   
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" onclick= "showData()" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            <button type="button" onclick= "update()" class="btn btn-primary">Atualizar</button>
           </div>
         </div>
       </div>
@@ -59,26 +106,30 @@
 
     <div class="container p-4">
       <!-- Botão para acionar modal -->
+      <div class="d-flex justify-content-center">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#completeModal">
-        Cadastrar Motorista
+        Cadastrar
       </button>
+      </div>
+    
+      <div class="container my-3">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">CPF</th>
+                <th scope="col">Endereço</th>
+                <th scope="col">Veiculo</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody id ="results"></tbody>
+          </table>
+      </div>
     </div>
-        <div class="col-sm-8">
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Nome</th>
-                        <th scope="col">CPF</th>
-                        <th scope="col">Endereço</th>
-                        <th scope="col">Veiculo</th>
-                        <th scope="col">Telefone</th>
-                        <th scope="col">Ações</th>
-                    </tr>
-                </thead>
-                <tbody id ="results"></tbody>
-            </table>
-        </div>
-    </div>
+    <script src="../scripts/update.js"></script>
     <script src="../scripts/cadastro.js"></script>
     <script src="../scripts/read.js"></script>
     <script src="../scripts/update.js"></script>
