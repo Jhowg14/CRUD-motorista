@@ -8,11 +8,13 @@ $cpf = $_POST['cpf'];
 $endereco = $_POST['endereco'];
 $veiculo = $_POST['veiculo'];
 $telefone = $_POST['telefone'];
+$datadeatualizacao = date('Y-m-d H:i:s');
+//pegar data atual
 
 if( empty($nome) || empty($cpf) || empty($endereco) || empty($veiculo) || empty($telefone)){
     echo json_encode(['message' => 'Todos os campos são obrigatórios.']);
     }else{
-        $sql = "UPDATE motoristas SET nome = '$nome', cpf = '$cpf', endereco = '$endereco', veiculo = '$veiculo', telefone = '$telefone' WHERE id = $id";
+        $sql = "UPDATE motoristas SET nome = '$nome', cpf = '$cpf', endereco = '$endereco', veiculo = '$veiculo', telefone = '$telefone', datadeatualizacao = '$datadeatualizacao' WHERE id = $id";
 
         $response = $connection->query($sql);
 

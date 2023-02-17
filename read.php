@@ -17,10 +17,10 @@ if($resultado->num_rows > 0){
             echo "<td>".$row['telefone']."</td>";
             
             echo "<td>
-                <button type = 'button' class='btn btn-success' onclick= 'getId('".$row['id']."')'  data-toggle='modal' data-target='#updateModal' >Editar </button>
+                <button type ='button' class='btn btn-success' onclick= getId('".$row['id']."') >Editar </button>
             </td>";
             echo "<td>
-                <button type = 'button' class='btn btn-danger' onclick=remove('".$row['id']."')>Excluir</button>
+                <button type ='button' class='btn btn-danger' onclick=remove('".$row['id']."')>Excluir</button>
             </td>";
         echo "</tr>";
     }

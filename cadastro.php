@@ -10,6 +10,7 @@ $cpf=$_POST['cpf'];
 $endereco=$_POST['endereco'];
 $veiculo=$_POST['veiculo'];
 $telefone=$_POST['telefone'];
+$datadecriacao = date('Y-m-d H:i:s');
 if(empty($nome) || empty($cpf) || empty($endereco) ||empty($veiculo) || empty($telefone)){
     echo json_encode(["message"=>"Preencha todos os campos"]);
 }else{
@@ -22,7 +23,7 @@ if(empty($nome) || empty($cpf) || empty($endereco) ||empty($veiculo) || empty($t
         echo json_encode(["message"=>"CPF já cadastrado"]);
     } else {
         // Insere os dados no banco
-        $sql = "INSERT INTO motoristas values(null, '$nome', '$cpf', '$endereco', '$veiculo', '$telefone', false)";
+        $sql = "INSERT INTO motoristas (nome, cpf, endereco, veiculo, telefone, excluido, datadecriacao) VALUES ('$nome', '$cpf', '$endereco', '$veiculo', '$telefone', false, '$datadecriacao')";
         // Se os dados forem inseridos com sucesso
         $result = $connection -> query($sql);
 

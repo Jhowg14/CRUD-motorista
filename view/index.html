@@ -10,7 +10,6 @@
     
   </head>
   <body>
-
     <!-- Modal -->
     <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -44,7 +43,7 @@
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Telefone</label>
-                      <input class="form-control" id="telefone" type="text" maxlength="14" placeholder="Número com DDD"/>
+                      <input class="form-control" id="telefone" type="text" maxlength="14" data-mask="(00)0000-0000" data-mask-selectonfocus="true" placeholder="Número com DDD"/>
                   </div>
               </div>
               </div>
@@ -105,14 +104,16 @@
     </div>
 
     <div class="container p-4">
-      <!-- Botão para acionar modal -->
-      <div class="d-flex justify-content-center">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#completeModal">
-        Cadastrar
-      </button>
-      </div>
+      <img src="http://localhost:80/GlobalDotCom//img/logo.jpg" style="display: block; margin: 0 auto;"wigth="200" height="100"></div>
+    </div>
     
       <div class="container my-3">
+        <div class="container p-3">
+         <!-- Botão para acionar modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#completeModal">
+          Cadastrar
+        </button>
+      </div>
           <table class="table table-bordered">
             <thead class="thead-dark">
               <tr>

@@ -1,3 +1,4 @@
+
 function getId(id){
     const form = new FormData();
     form.append("id", id);
@@ -7,22 +8,17 @@ function getId(id){
         body: form
     }).then(response =>{
         response.json().then(data => {
-            window.localStorage.setItem("user", JSON.stringify(data));
-            window.location.href = "index.html";
+            console.log(data);
+            $('#updateModal').modal('show')
+            document.getElementById("id").value = data[0].id;
+            document.getElementById("nome-1").value = data[0].nome;
+            document.getElementById("cpf-1").value = data[0].cpf;
+            document.getElementById("endereco-1").value = data[0].endereco;
+            document.getElementById("veiculo-1").value = data[0].veiculo;
+            document.getElementById("telefone-1").value = data[0].telefone;
+
         })
     })
-}
-userData();
-function userData() {
-    const data = JSON.parse(window.localStorage.getItem("user"));
-    const user = data[0];
-    
-    document.getElementById("id").value = user.id;
-    document.getElementById("nome-1").value = user.nome;
-    document.getElementById("cpf-1").value = user.cpf;
-    document.getElementById("endereco-1").value = user.endereco;
-    document.getElementById("veiculo-1").value = user.veiculo;
-    document.getElementById("telefone-1").value = user.telefone;
 }
 
 function update(){

@@ -1,4 +1,27 @@
+const input = document.getElementById('cpf');
+input.addEventListener('keypress', () => {
+    let inputlength = input.value.length;
 
+    if (inputlength === 3 || inputlength === 7) {
+        input.value += '.';
+    } else if (inputlength === 11) {
+        input.value += '-';
+    }
+});
+const input2 = document.getElementById('telefone');
+input2.addEventListener('keypress', () => {
+    let inputlength = input2.value.length;
+
+    if (inputlength === 0) {
+        input2.value += '(';
+    } else if (inputlength === 3) {
+        input2.value += ')';
+    } else if (inputlength === 4) {
+        input2.value += ' ';
+    } else if (inputlength === 9) {
+        input2.value += '-';
+    }
+});
 //função para cadastrar usuário
 function createUser(){
     const nome = document.getElementById("nome").value;
