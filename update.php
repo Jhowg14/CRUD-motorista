@@ -14,14 +14,19 @@ $datadeatualizacao = date('Y-m-d H:i:s');
 if( empty($nome) || empty($cpf) || empty($endereco) || empty($veiculo) || empty($telefone)){
     echo json_encode(['message' => 'Todos os campos são obrigatórios.']);
     }else{
-        $sql = "UPDATE motoristas SET nome = '$nome', cpf = '$cpf', endereco = '$endereco', veiculo = '$veiculo', telefone = '$telefone', datadeatualizacao = '$datadeatualizacao' WHERE id = $id";
+        $str = "SELECT * FROM motoristas WHERE cpf = '$cpf' and excluido = false";
+        $response = $connection->query( $str);
 
-        $response = $connection->query($sql);
-
-        if($response){
-            echo json_encode(["message" => "Cliente atualizado com sucesso."]);
-        }else{
-            echo json_encode(["message" => "Erro ao atualizar cliente."]);
+        if ($response->num_rows > 0 and $response->fetch_assoc()['id'] != $id) {
+            echo json_encode(["message"=>"CPF já cadastrado"]);
+        } else {
+            $sql = "UPDATE motoristas SET nome = '$nome', cpf = '$cpf', endereco = '$endereco', veiculo = '$veiculo', telefone = '$telefone', datadeatualizacao = '$datadeatualizacao' WHERE id = $id";
+            $result = $connection->query( $sql);
+            if($result){
+                echo json_encode(["message" => "Cliente atualizado com sucesso."]);
+            }else{
+                echo json_encode(["message" => "Erro ao atualizar cliente."]);
+            }
         }
 }
 

@@ -5,7 +5,7 @@ require_once('config.php');
 // Verifica se o usuário está logado
 session_start();
 // Se o usuário não estiver logado, redireciona para a página de login
-$nome=$_POST['nome'];
+$nome=$_POST['nome'];//recebe o nome do usuário
 $cpf=$_POST['cpf'];
 $endereco=$_POST['endereco'];
 $veiculo=$_POST['veiculo'];

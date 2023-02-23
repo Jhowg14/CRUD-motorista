@@ -47,12 +47,14 @@ function createUser(){
     }).then(response => {
         response.json().then(result => {
             //console.log(result)
+            showData();
             Swal.fire(result.message);
-            document.getElementById('nome').value = "";
-            document.getElementById('cpf').value = "";
-            document.getElementById('endereco').value = "";
-            document.getElementById('veiculo').value = "";
-            document.getElementById('telefone').value = "";
+            $("#nome").val("");
+            $("#cpf").val("");
+            $("#endereco").val("");
+            $("#veiculo").val("");
+            $("#telefone").val("");
+            $("#completeModal").modal('hide');
         }).catch(err => console.log(err))
     })
 }

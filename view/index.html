@@ -27,23 +27,23 @@
               <div class="row g-3">
                   <div class="col-md-6">
                       <label for="" class="form-label">Nome</label>
-                      <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva"/>
+                      <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva">
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">CPF</label>
-                      <input class="form-control" id="cpf" type="text" placeholder="Insira somente números"pattern="[0-9][11]" autocomplete="off" maxlength="14" required/>
+                      <input class="form-control" id="cpf" type="text" placeholder="Insira somente números"pattern="[0-9][11]" autocomplete="off" maxlength="14" required>
                   </div>
                   <div class="col-md-12">
                       <label class="form-label">Endereço</label>
-                      <input class="form-control" id="endereco" type="text" placeholder="Ex: Avenida Jose Bueno 680"/>   
+                      <input class="form-control" id="endereco" type="text" placeholder="Ex: Avenida Jose Bueno 680">   
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Veiculo</label>
-                      <input class="form-control" id="veiculo" type="text" placeholder="Ex: Trator de Esteira"/>
+                      <input class="form-control" id="veiculo" type="text" placeholder="Ex: Trator de Esteira">
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Telefone</label>
-                      <input class="form-control" id="telefone" type="text" maxlength="14" data-mask="(00)0000-0000" data-mask-selectonfocus="true" placeholder="Número com DDD"/>
+                      <input class="form-control" id="telefone" type="tel" maxlength="14" data-mask="(00)0000-0000" data-mask-selectonfocus="true" placeholder="Número com DDD">
                   </div>
               </div>
               </div>
@@ -72,31 +72,31 @@
             <div class="card p-2">
               <div class="row g-3">
                 <div class="col-md-6">
-                  <input class="form-control" id="id" type="text" hidden />
+                  <input id="id" type="text" hidden />
                   <label for="" class="form-label">Nome</label>
-                  <input class="form-control" id="nome-1" type="text" />
+                  <input class="form-control" id="nome-1" type="text">
               </div>
               <div class="col-md-6">
                   <label class="form-label">CPF</label>
-                  <input class="form-control" id="cpf-1" type="text" autocomplete="off" maxlenght="14" required />
+                  <input class="form-control" id="cpf-1" type="text" autocomplete="off" maxlenght="14" required>
               </div>
               <div class="col-md-12">
                   <label class="form-label">Endereço</label>
-                  <input class="form-control" id="endereco-1" type="text"/>   
+                  <input class="form-control" id="endereco-1" type="text">   
               </div>
               <div class="col-md-6">
                   <label class="form-label">Veiculo</label>
-                  <input class="form-control" id="veiculo-1" type="text" />
+                  <input class="form-control" id="veiculo-1" type="text">
               </div>
               <div class="col-md-6">
                   <label class="form-label">Telefone</label>
-                  <input class="form-control" id="telefone-1" type="text" maxlenght="14"/>
+                  <input class="form-control" id="telefone-1" type="text" maxlenght="14">
                 </div>   
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" onclick= "showData()" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
             <button type="button" onclick= "update()" class="btn btn-primary">Atualizar</button>
           </div>
         </div>
@@ -131,7 +131,7 @@
       </div>
     </div>
     <script src="../scripts/update.js"></script>
-    <script src="../scripts/cadastro.js"></script>
+    <script src="../scripts/cadastro.js?v=1.0"></script>
     <script src="../scripts/read.js"></script>
     <script src="../scripts/update.js"></script>
     <script src="../scripts/remove.js"></script>
