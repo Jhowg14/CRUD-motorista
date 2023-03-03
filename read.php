@@ -10,14 +10,14 @@ if (!empty($pagina)) {
     $inicio = ($pagina * 10) - 10;
 
 
-    $sql = "SELECT * FROM motoristas WHERE excluido = false ORDER BY nome ASC LIMIT $inicio, 10";
+    $sql = "SELECT * FROM motoristas WHERE excluido = false ORDER BY nome ASC ";
 
     $resultado = $connection->query($sql);
 
     //se o número de linhas for maior que 0, exibe os dados
     if($resultado->num_rows > 0){
         $table =
-        "<table class='table table-bordered'>
+        "<table id='myTable' class='table table-bordered'>
             <thead class='thead-dark'>
             <tr >
                 <th scope='col' style='text-align: center'>Nome</th>

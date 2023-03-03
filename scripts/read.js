@@ -19,6 +19,9 @@ function showData(pagina){
         dataType: 'json',
         success: function(data){
             $(".listarUsuarios").html(data);
+
+            let table = new DataTable('#myTable');
+
             currentPage = paginaAdd;
         }
     });
