@@ -22,3 +22,4 @@ if(empty($id)){
         echo json_encode(["message"=>"Erro ao remover motorista"]);
     }
 }
+?>

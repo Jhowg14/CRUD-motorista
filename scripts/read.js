@@ -1,7 +1,11 @@
+var currentPage = 1;
 $(document).ready(function(){
-    showData(1);
+ 
+    showData(currentPage);
+    //quando eu clico no botão de cadastrar, eu chamo a função openModal
     $("#botaoCadastrar").attr("onclick","openModal()");
 });
+
 function showData(pagina){
     var displaydata = "true";
     var paginaAdd = pagina;
@@ -15,6 +19,7 @@ function showData(pagina){
         dataType: 'json',
         success: function(data){
             $(".listarUsuarios").html(data);
+            currentPage = paginaAdd;
         }
     });
 }
