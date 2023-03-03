@@ -1,19 +1,20 @@
 $(document).ready(function(){
-    showData();
+    showData(1);
     $("#botaoCadastrar").attr("onclick","openModal()");
 });
-function showData(){
+function showData(pagina){
     var displaydata = "true";
-    
+    var paginaAdd = pagina;
     $.ajax({
         url: 'http://localhost:80/GlobalDotCom/read.php',
         type: 'POST',
         data:{
-            displaySend: displaydata
+            pagina: paginaAdd,
+            displaySend: displaydata,
         },
         dataType: 'json',
         success: function(data){
-            $("#results").html(data);
+            $(".listarUsuarios").html(data);
         }
     });
 }
