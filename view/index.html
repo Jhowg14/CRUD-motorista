@@ -14,24 +14,27 @@
     <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          
+            <div class="card-header bg-secondary">
             <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
               <span aria-hidden="true">&times;</span>
             </button>
+            <h4 style="color:#fff" id="tituloModal">Cadastrar Motorista</h4>
+            
           </div>
+          
           <div class="modal-body">
-          <div class="card-header bg-secondary">
-            <h5 style="color:#fff">Cadastrar Motorista</h5>
-            </div>
+          
             <div class="card p-2">
               <div class="row g-3">
                   <div class="col-md-6">
+                      <input id="id" type="text" hidden />
                       <label for="" class="form-label">Nome</label>
                       <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva">
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">CPF</label>
-                      <input class="form-control" id="cpf" type="text" placeholder="Insira somente números"pattern="[0-9][11]" autocomplete="off" maxlength="14" required>
+                      <input class="form-control" id="cpf" type="text" placeholder="Insira somente números" pattern="[0-9]" autocomplete="off" maxlength="14" required>
                   </div>
                   <div class="col-md-12">
                       <label class="form-label">Endereço</label>
@@ -39,24 +42,32 @@
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Veiculo</label>
-                      <input class="form-control" id="veiculo" type="text" placeholder="Ex: Trator de Esteira">
+                      <!--fazer select de veiculos-->
+                      <select class="form-control" id="veiculo" type="text">
+                          <option value="">Selecione veiculo</option>
+                          <option value="Guincho">Guincho</option>
+                          <option value="Trator">Trator</option>
+                          <option value="Caminhao">Caminhao</option>
+                          <option value="Empilhadeira">Empilhadeira</option>
+                          <option value="Guindaste">Guindaste</option>
+                      </select>
                   </div>
                   <div class="col-md-6">
                       <label class="form-label">Telefone</label>
-                      <input class="form-control" id="telefone" type="tel" maxlength="14" data-mask="(00)0000-0000" data-mask-selectonfocus="true" placeholder="Número com DDD">
+                      <input class="form-control" id="telefone" type="tel" maxlength="14" placeholder="Número com DDD">
                   </div>
               </div>
               </div>
           </div>
           <div class="modal-footer">
-            <button type="button" onclick= "showData()" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-            <button type="button" onclick= "createUser()" class="btn btn-primary">Cadastrar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+            <button type="button" id="botaoModal" class="btn btn-primary">Cadastrar</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Update Modal-->
+    <!-- Update Modal
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -101,44 +112,46 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
-    <div class="container p-4">
-      <img src="http://localhost:80/GlobalDotCom//img/logo.jpg" style="display: block; margin: 0 auto;"wigth="200" height="100"></div>
+    <div  class="container my-3">
+      <img id="logo" class="text-center" src="http://localhost:80/GlobalDotCom//img/logo.jpg" style="display: block; margin: auto;"height="100"></div>
     </div>
     
       <div class="container my-3">
         <div class="container p-3">
          <!-- Botão para acionar modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#completeModal">
+        <button type="button" id="botaoCadastrar" class="btn btn-primary">
           Cadastrar
         </button>
       </div>
           <table class="table table-bordered">
             <thead class="thead-dark">
-              <tr>
-                <th scope="col">Nome</th>
-                <th scope="col">CPF</th>
-                <th scope="col">Endereço</th>
-                <th scope="col">Veiculo</th>
-                <th scope="col">Telefone</th>
-                <th scope="col">Editar</th>
-                <th scope="col">Excluir</th>
+              <tr >
+                <th scope="col" style="text-align: center">Nome</th>
+                <th scope="col" style="text-align: center">CPF</th>
+                <th scope="col" style="text-align: center">Endereço</th>
+                <th scope="col" style="text-align: center">Veiculo</th>
+                <th scope="col" style="text-align: center">Telefone</th>
+                <th scope="col" style="text-align: center">Editar</th>
+                <th scope="col" style="text-align: center">Excluir</th>
               </tr>
             </thead>
             <tbody id ="results"></tbody>
           </table>
       </div>
     </div>
-    <script src="../scripts/update.js"></script>
-    <script src="../scripts/cadastro.js?v=1.0"></script>
-    <script src="../scripts/read.js"></script>
-    <script src="../scripts/update.js"></script>
-    <script src="../scripts/remove.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Bootstrap JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" ></script>
+    <!-- Font Awesome JS-->
+    <script src="../scripts/update.js"></script>
+    <script src="../scripts/cadastro.js?version=3"></script>
+    <script src="../scripts/read.js?version=3"></script>
+    <script src="../scripts/update.js?version=2"></script>
+    <script src="../scripts/remove.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
   </body>
 </html>

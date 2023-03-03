@@ -12,7 +12,7 @@ $veiculo=$_POST['veiculo'];
 $telefone=$_POST['telefone'];
 $datadecriacao = date('Y-m-d H:i:s');
 if(empty($nome) || empty($cpf) || empty($endereco) ||empty($veiculo) || empty($telefone)){
-    echo json_encode(["message"=>"Preencha todos os campos"]);
+    echo json_encode(['message' => 'Todos os campos são obrigatórios.']);
 }else{
     // Verifica se o CPF já está cadastrado
     $str = "SELECT * FROM motoristas WHERE cpf = '$cpf' and excluido = false";
@@ -20,20 +20,25 @@ if(empty($nome) || empty($cpf) || empty($endereco) ||empty($veiculo) || empty($t
 
     //
     if ($response->num_rows > 0) {
-        echo json_encode(["message"=>"CPF já cadastrado"]);
+        // Se o CPF já estiver cadastrado, exibe uma mensagem
+        echo json_encode(["message"=>"CPF já cadastrado","flag"=>true]);
     } else {
         // Insere os dados no banco
         $sql = "INSERT INTO motoristas (nome, cpf, endereco, veiculo, telefone, excluido, datadecriacao) VALUES ('$nome', '$cpf', '$endereco', '$veiculo', '$telefone', false, '$datadecriacao')";
         // Se os dados forem inseridos com sucesso
+        
+        // Executa a query
         $result = $connection -> query($sql);
+        //seleciona o id do motorista cadastrado
+        $id = $connection->query("SELECT id FROM motoristas WHERE cpf = '$cpf'")->fetch_assoc()['id'];//fetch_assoc() retorna um array associativo
 
         if(!$result){
-            http_response_code(500);
-            echo json_encode(["message"=>"Erro ao cadastrar"]);
+            echo json_encode(["message"=>"Erro ao cadastrar motorista"]);
         }else{
-            http_response_code(200);
-            echo json_encode(["message"=>"Cadastro realizado com sucesso"]);
+            // Exibe uma mensagem de sucesso e o id do usuário
+            echo json_encode(["message"=>"Motorista cadastrado com sucesso", "id"=>$id]);
         }
+        
     }
 }
 ?>

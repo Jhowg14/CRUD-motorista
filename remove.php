@@ -12,9 +12,12 @@ if(empty($id)){
     $sql = "UPDATE motoristas SET excluido = TRUE, datadeexclusao = '$datadeexclusao' WHERE id = '$id'";
     
     $response = $connection->query($sql);
+
+    //sleciona o cpf do motorista removido
+    $cpf = $connection->query("SELECT cpf FROM motoristas WHERE id = '$id'")->fetch_assoc()['cpf'];//fetch_assoc() retorna um array associativo
     
     if($response){
-        echo json_encode(["message"=>"Motorista removido com sucesso"]);
+        echo json_encode(["message"=>"Motorista removido com sucesso", "cpf"=>$cpf]);
     }else{
         echo json_encode(["message"=>"Erro ao remover motorista"]);
     }

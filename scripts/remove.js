@@ -1,6 +1,7 @@
 function remove(id){
-    const form = new FormData();
-    form.append('id', id);
+    const form = {
+        id: id
+    }
 
     const url = 'http://localhost:80/GlobalDotCom/remove.php';
     Swal.fire({
@@ -14,15 +15,20 @@ function remove(id){
         confirmButtonText: 'Sim, apague isso!'
       }).then((result) => {
         if (result.isConfirmed) {
-            fetch(url, {
-                method: 'POST',
-                body: form
-            }).then(response =>{
-                response.json().then(data => {
-                    swal.fire(data.message)
-                    showData();
-                })
-            }).catch(error => console.log(err))
+            $.ajax({
+                url: url,
+                method : 'POST',
+                data: form,
+                dataType: 'json'
+            }).done(function(response){
+                //se for o último registro, mostra a mensagem de nenhum registro encontrado
+                $("tr#line_"+id).remove();
+                Swal.fire(response.message);
+                if ($("#results").children("tr").length == 0){
+                    $("#results").append("<tr id='nenhum'><td colspan='7' style='text-align: center'>Nenhum motorista encontrado</td></tr>");
+                }
+            });
         }
-      })
+    });
+
 }

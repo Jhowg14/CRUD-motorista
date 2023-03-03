@@ -15,7 +15,7 @@ if(empty($id)){
     //Verifica se há motoristas com o id informado
     if($response -> num_rows > 0){
         foreach($response as $r){//Percorre o array de motoristas
-            $rows[] = $r;//$rows conterá todos os elementos em $response, na mesma ordem
+            $rows= $r;//$rows conterá todos os elementos em $response, na mesma ordem
         }
         echo json_encode($rows);//Retorna o motorista em formato JSON
     }else{
