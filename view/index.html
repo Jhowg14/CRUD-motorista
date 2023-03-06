@@ -125,8 +125,23 @@
       </button>
     </div>
     <div class="container">
-      <span class="listarUsuarios">Motoristas</span>
+      <table id='myTable' class='table table-bordered'>
+        <thead class='thead-dark'>
+        <tr >
+            <th scope='col' style='text-align: center'>Nome</th>
+            <th scope='col' style='text-align: center'>CPF</th>
+            <th scope='col' style='text-align: center'>Endereço</th>
+            <th scope='col' style='text-align: center'>Veiculo</th>
+            <th scope='col' style='text-align: center'>Telefone</th>
+            <th scope='col' style='text-align: center'>Editar</th>
+            <th scope='col' style='text-align: center'>Excluir</th>
+        </tr>
+        </thead>
+        <tbody id="listarUsuario">
+        </tbody>
+      </table>
     </div>
+
     
     <!-- Bootstrap JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -134,19 +149,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" ></script>
     <!-- Font Awesome JS-->
     <script src="../scripts/update.js"></script>
-    <script src="../scripts/cadastro.js?version=3"></script>
-    <script src="../scripts/read.js?version=3"></script>
+    <script src="../scripts/cadastro.js?version=5"></script>
+    <script src="../scripts/read.js?version=4"></script>
     <script src="../scripts/update.js?version=2"></script>
     <script src="../scripts/remove.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
-
-    <script>
-
-      jQuery(document).ready(function(){
-      })
-
-    </script>
     
   </body>
 </html>

@@ -30,7 +30,7 @@ function createUser(){
     var enderecoAdd = $("#endereco").val();
     //pega o valor do select
     var veiculoAdd = $("#veiculo option:selected").val();
-    console.log(veiculoAdd);
+    //console.log(veiculoAdd);
     var telefoneAdd = $("#telefone").val();
 
     //se o cpf e o telefone não forem válidos, não adiciona
@@ -67,22 +67,32 @@ function createUser(){
             $("#telefone").val("");
             
             //tirar "nenhum registro encontrado, caso exista"
-            $("#results tr").filter("#nenhum").remove();
+            $("#listarUsuario tr").filter("#nenhum").remove();
 
             Swal.fire(response.message);
             //se tiver algum campo vazio ou cpf já cadastrado, não adiciona se ja tiver cpf cadastrado, não adiciona
-            
+            $table = new DataTable('#myTable');
+
             if (nomeAdd != "" && cpfAdd != "" && enderecoAdd != "" && veiculoAdd != "" && telefoneAdd != "" && response.flag != true){
                 var inserted = false;
-                $("#results tr").each(function(){
-                    var nome = $(this).find("th:first").text();
-                    if (nome > nomeAdd && !inserted){
-                        $(this).before(`<tr id='line_${$id}'><th>${nomeAdd}</th><td>${cpfAdd}</td><td>${enderecoAdd}</td><td>${veiculoAdd}</td><td>${telefoneAdd}</td><td><button class='btn btn-success' onclick='getId(${$id})'>Editar</button></td><td><button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button></td></tr>`);
+                //adiciona o novo usuário na ordem alfabética usando a table
+                $table.rows().every(function(rowIdx, tableLoop, rowLoop){
+                    var $nome = this.data()[0];
+                    if ($nome > nomeAdd && !inserted){
+                        $table.row.add([
+                            //nome em negrito
+                            `<b>${nomeAdd}</b>`,
+                            cpfAdd, 
+                            enderecoAdd, veiculoAdd, 
+                            telefoneAdd, 
+                            `<button class='btn btn-success' onclick='getId(${$id})'>Editar</button>`, 
+                            `<button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button>`]).draw();
                         inserted = true;
+
                     }
                 });
                 if (!inserted)
-                $("#results").append(`<tr id='line_${$id}'><th>${nomeAdd}</th><td>${cpfAdd}</td><td>${enderecoAdd}</td><td>${veiculoAdd}</td><td>${telefoneAdd}</td><td><button class='btn btn-success' onclick='getId(${$id})'>Editar</button></td><td><button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button></td></tr>`); 
+                $("#listarUsuario").append(`<tr id='line_${$id}'><th>${nomeAdd}</th><td>${cpfAdd}</td><td>${enderecoAdd}</td><td>${veiculoAdd}</td><td>${telefoneAdd}</td><td><button class='btn btn-success' onclick='getId(${$id})'>Editar</button></td><td><button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button></td></tr>`); 
             }
         }).fail(function(response){
             Swal.fire(response.message);

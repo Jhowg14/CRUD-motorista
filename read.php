@@ -16,20 +16,7 @@ if (!empty($pagina)) {
 
     //se o número de linhas for maior que 0, exibe os dados
     if($resultado->num_rows > 0){
-        $table =
-        "<table id='myTable' class='table table-bordered'>
-            <thead class='thead-dark'>
-            <tr >
-                <th scope='col' style='text-align: center'>Nome</th>
-                <th scope='col' style='text-align: center'>CPF</th>
-                <th scope='col' style='text-align: center'>Endereço</th>
-                <th scope='col' style='text-align: center'>Veiculo</th>
-                <th scope='col' style='text-align: center'>Telefone</th>
-                <th scope='col' style='text-align: center'>Editar</th>
-                <th scope='col' style='text-align: center'>Excluir</th>
-            </tr>
-            </thead>
-            <tbody>";
+        $table ="";
         while($row = $resultado->fetch_assoc()){//enquanto houver dados a serem exibidos, Fetch_assoc() retorna uma matriz associativa de strings que corresponde à linha recuperada, onde cada chave na matriz representa o nome de uma das colunas do conjunto de resultados
             //exibe os dados
             $table.= '<tr id="line_'.$row['id'].'">
@@ -42,11 +29,8 @@ if (!empty($pagina)) {
                                 <td><button class="btn btn-danger" onclick="remove('.$row['id'].')">Excluir</button></td>
                         </tr>';
         }
-        $table.= '</tbody>
-        </table>
-        </div>';
         //conta o número total de linhas
-        $query_pg = "SELECT COUNT('id') AS num_linhas FROM motoristas WHERE excluido = false";
+        /*$query_pg = "SELECT COUNT('id') AS num_linhas FROM motoristas WHERE excluido = false";
         $row_pg = $connection->query($query_pg)->fetch_assoc();//fetch_assoc() retorna uma matriz associativa de strings que corresponde à linha recuperada, onde cada chave na matriz representa o nome de uma das colunas do conjunto de resultados
         //quantidade de páginas
         $quantidade_pg = ceil($row_pg['num_linhas'] / 10);//ceil() arredonda frações para cima
@@ -67,7 +51,7 @@ if (!empty($pagina)) {
             }
         }
         $table .= "<li class='page-item'><a class='page-link' id='previous' href='#' onclick='showData($quantidade_pg)'>Ultima</a></li>";
-        $table .= "</ul></nav>";
+        $table .= "</ul></nav>";*/
 
         echo json_encode($table);  
     }else{//se não, exibe uma mensagem, nesse caso, nenhuma linha encontrada

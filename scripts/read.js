@@ -18,7 +18,7 @@ function showData(pagina){
         },
         dataType: 'json',
         success: function(data){
-            $(".listarUsuarios").html(data);
+            $("#listarUsuario").html(data);
 
             let table = new DataTable('#myTable');
 
