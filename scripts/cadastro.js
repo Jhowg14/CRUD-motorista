@@ -68,35 +68,33 @@ function createUser(){
             
             //tirar "nenhum registro encontrado, caso exista"
             $("#listarUsuario tr").filter("#nenhum").remove();
-
+            
+           
             Swal.fire(response.message);
             //se tiver algum campo vazio ou cpf já cadastrado, não adiciona se ja tiver cpf cadastrado, não adiciona
             $table = new DataTable('#myTable');
-
+            //fechar modal
+            $("#completeModal").modal("hide");
             if (nomeAdd != "" && cpfAdd != "" && enderecoAdd != "" && veiculoAdd != "" && telefoneAdd != "" && response.flag != true){
-                var inserted = false;
                 //adiciona o novo usuário na ordem alfabética usando a table
-                $table.rows().every(function(rowIdx, tableLoop, rowLoop){
-                    var $nome = this.data()[0];
-                    if ($nome > nomeAdd && !inserted){
-                        $table.row.add([
+                $table.row.add([
                             //nome em negrito
                             `<b>${nomeAdd}</b>`,
                             cpfAdd, 
-                            enderecoAdd, veiculoAdd, 
+                            enderecoAdd,
+                            veiculoAdd, 
                             telefoneAdd, 
                             `<button class='btn btn-success' onclick='getId(${$id})'>Editar</button>`, 
                             `<button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button>`]).draw();
-                        inserted = true;
-
-                    }
-                });
-                if (!inserted)
-                $("#listarUsuario").append(`<tr id='line_${$id}'><th>${nomeAdd}</th><td>${cpfAdd}</td><td>${enderecoAdd}</td><td>${veiculoAdd}</td><td>${telefoneAdd}</td><td><button class='btn btn-success' onclick='getId(${$id})'>Editar</button></td><td><button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button></td></tr>`); 
+                            const index = $table.row.add().index();
+                            console.log(index);
+                            const newPage = Math.floor(index / $table.page.len());
+                            $table.page(newPage).draw(false);
             }
         }).fail(function(response){
             Swal.fire(response.message);
     });
+    
 }
 
 //funçao para abrir modal para cadastrar usuário
