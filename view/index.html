@@ -28,21 +28,21 @@
           
             <div class="card p-2">
               <div class="row g-3">
-                  <div class="col-md-6">
-                      <input id="id" type="text" hidden />
-                      <label for="" class="form-label">Nome</label>
+                <div class="col-md-6">
+                  <input id="id" type="text" hidden />
+                    <label for="" class="form-label">Nome<span style="color:red">*</span></label>
                       <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva">
-                  </div>
+                </div>
                   <div class="col-md-6">
-                      <label class="form-label">CPF</label>
+                      <label class="form-label">CPF<span style="color:red">*</span></label>
                       <input class="form-control" id="cpf" type="text" placeholder="Insira somente números" pattern="[0-9]" autocomplete="off" maxlength="14" required>
                   </div>
                   <div class="col-md-12">
-                      <label class="form-label">Endereço</label>
+                      <label class="form-label">Endereço<span style="color:red">*</span></label>
                       <input class="form-control" id="endereco" type="text" placeholder="Ex: Avenida Jose Bueno 680">   
                   </div>
                   <div class="col-md-6">
-                      <label class="form-label">Veiculo</label>
+                      <label class="form-label">Veiculo<span style="color:red">*</span></label>
                       <!--fazer select de veiculos-->
                       <select class="form-control" id="veiculo" type="text">
                           <option value="">Selecione veiculo</option>
@@ -54,11 +54,11 @@
                       </select>
                   </div>
                   <div class="col-md-6">
-                      <label class="form-label">Telefone</label>
+                      <label class="form-label">Telefone<span style="color:red">*</span></label>
                       <input class="form-control" id="telefone" type="tel" maxlength="14" placeholder="Número com DDD">
                   </div>
               </div>
-              </div>
+            </div><span style="color:rgb(24, 25, 26) ;font-size: 10px">campos obrigatórios <span style="color:red">*</span></span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
@@ -148,11 +148,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" ></script>
     <!-- Font Awesome JS-->
-    <script src="../scripts/update.js"></script>
-    <script src="../scripts/cadastro.js?version=6"></script>
-    <script src="../scripts/read.js?version=4"></script>
-    <script src="../scripts/update.js?version=2"></script>
-    <script src="../scripts/remove.js"></script>
+    <script src="../scripts/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
     
