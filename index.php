@@ -27,28 +27,27 @@
         case 'getId':
             pegarId();
             break;
+        case 'esca':
+            escalonamento();
+            break;
         default:
             echo json_encode(['message' => 'Ação não definida.']);
             break;
     }
-    //funçao para ler os dados do banco de dados
-function read(){
-
-    $pagina = $_POST['pagina'];//recebe a página atual
-    //com limite de 10 linhas
-    if (!empty($pagina)) {
+//funçao realiza escalonamento de dados
+function escalonamento(){
+    global $connection;
+    $start = $_POST['start'];
+    $end = $_POST['batch_size'];
 
         //calcula o início da visualização
         //$inicio = ($pagina * 10) - 10;
 
-        $sql = "SELECT * FROM motoristas WHERE excluido = false ORDER BY nome ASC ";
+        $sql = "SELECT * FROM motoristas WHERE excluido = false ORDER BY nome ASC LIMIT $start, $end";
         
-        global $connection;
         //executa a query
         $resultado = mysqli_query($connection, $sql);
 
-
-        //se o número de linhas for maior que 0, exibe os dados
         if($resultado->num_rows > 0){
             $table ="";
             while($row = $resultado->fetch_assoc()){//enquanto houver dados a serem exibidos, Fetch_assoc() retorna uma matriz associativa de strings que corresponde à linha recuperada, onde cada chave na matriz representa o nome de uma das colunas do conjunto de resultados
@@ -63,7 +62,31 @@ function read(){
                                     <td><button class="btn btn-danger" onclick="remove('.$row['id'].')">Excluir</button></td>
                             </tr>';
             }
-            //conta o número total de linhas
+            //retorna os dados
+            echo json_encode($table);
+        }else{
+            echo json_encode(["message" => "Nenhum registro encontrado."]);
+        }
+}
+
+//funçao para ler os dados do banco de dados
+function read(){
+    global $connection;
+    $pagina = $_POST['pagina'];//recebe a página atual
+    //com limite de 10 linhas
+    if (!empty($pagina)) {
+
+        //calcula o início da visualização
+        //$inicio = ($pagina * 10) - 10;
+
+        $sql = "SELECT * FROM motoristas WHERE excluido = false ORDER BY nome ASC";
+        
+        //executa a query
+        $resultado = mysqli_query($connection, $sql);
+
+
+        //se o número de linhas for maior que 0, exibe os dados
+        if($resultado->num_rows > 0){
             /*$query_pg = "SELECT COUNT('id') AS num_linhas FROM motoristas WHERE excluido = false";
             $row_pg = $connection->query($query_pg)->fetch_assoc();//fetch_assoc() retorna uma matriz associativa de strings que corresponde à linha recuperada, onde cada chave na matriz representa o nome de uma das colunas do conjunto de resultados
             //quantidade de páginas
@@ -87,7 +110,7 @@ function read(){
             $table .= "<li class='page-item'><a class='page-link' id='previous' href='#' onclick='showData($quantidade_pg)'>Ultima</a></li>";
             $table .= "</ul></nav>";*/
 
-            echo json_encode($table);  
+            echo json_encode($resultado->num_rows);
         }else{//se não, exibe uma mensagem, nesse caso, nenhuma linha encontrada
             echo json_encode("<tr id='nenhum'><td colspan='7' style='text-align: center'>Nenhum motorista encontrado</td></tr>");
         }

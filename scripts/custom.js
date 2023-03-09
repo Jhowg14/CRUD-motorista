@@ -2,6 +2,7 @@ var currentPage = 1;
 $(document).ready(function(){
  
     showData(currentPage);
+    
     //quando eu clico no botão de cadastrar, eu chamo a função openModal
     $("#botaoCadastrar").attr("onclick","openModal()");
     
@@ -11,7 +12,37 @@ $(document).ready(function(){
         }
     });
 });
+function display_records_in_batches(start, end, batch_size) {
+    if (start > end) {
+        // Todos os registros foram exibidos
+        return;
+    }
+    //batch_size é
+    var next = start + batch_size;
+    if (next > end) {
+        next = end;
+    }
+    const url = 'http://localhost:80/GlobalDotCom/index.php';
+    $.post(url, {start: start, batch_size: batch_size, funcao:'esca'}, function(data) {
+        var response = JSON.parse(data);
+        // Adiciona os dados dos registros na página
+        $("#listarUsuario").append(response);
+        
+        // Atualiza a barra de progresso ou mostra uma mensagem de feedback
+        //desbloquear a barra de progresso
+        //$('.progress').css('width', '0%').attr('aria-valuenow', 0);
+        //console.log(response);
+        //faz esperar 1 segundo para exibir os próximos registros
+        
 
+        console.log(next);
+        // Chama a função novamente para exibir os próximos registros
+        //$table = new DataTable('#myTable');
+        display_records_in_batches(next, end, batch_size);
+    });
+     //$table = new DataTable('#myTable');
+    //$('#progress').hide();
+}
 
 function showData(pagina){
     var displaydata = "true";
@@ -26,11 +57,11 @@ function showData(pagina){
         },
         dataType: 'json',
         success: function(data){
-            $("#listarUsuario").html(data);
-
-            let table = new DataTable('#myTable');
-
+            
             currentPage = paginaAdd;
+            console.log(data);
+            display_records_in_batches(0, data, 2);
+           
         }
     });
 }
@@ -61,7 +92,6 @@ input2.addEventListener('keypress', () => {
 });
 //função para cadastrar usuário
 function createUser(){
-    $("#cpf").css("border-color", "#CCC");
     //pega os valores dos inputs
     var nomeAdd = $("#nome").val();
     var cpfAdd = $("#cpf").val();
@@ -70,16 +100,13 @@ function createUser(){
     var veiculoAdd = $("#veiculo option:selected").val();
     //console.log(veiculoAdd);
     var telefoneAdd = $("#telefone").val();
-
-
     //se o cpf e o telefone não forem válidos, não adiciona
     if(!validarCPF(cpfAdd)){
         Swal.fire("CPF inválido");
         $("#cpf").css("border-color", "red");
-        //vo
-        return;
+        
+        return;//return volta para a função que chamou a função atual
     }
-    $("#cpf").css("border-color", "#CCC");
     if(!validarTelefone(telefoneAdd)){
         Swal.fire("Telefone inválido");
         $("#telefone").css("border-color", "red");
@@ -116,25 +143,12 @@ function createUser(){
            
             Swal.fire(response.message);
             //se tiver algum campo vazio ou cpf já cadastrado, não adiciona se ja tiver cpf cadastrado, não adiciona
-            $table = new DataTable('#myTable');
             //fechar modal
-            
             if (nomeAdd != "" && cpfAdd != "" && enderecoAdd != "" && veiculoAdd != "" && telefoneAdd != "" && response.flag != true){
-                //adiciona o novo usuário na ordem alfabética usando a table
-                $table.row.add([
-                            //nome em negrito
-                            `<b>${nomeAdd}</b>`,
-                            cpfAdd, 
-                            enderecoAdd,
-                            veiculoAdd, 
-                            telefoneAdd, 
-                            `<button class='btn btn-success' onclick='getId(${$id})'>Editar</button>`, 
-                            `<button class='btn btn-danger' onclick='remove(${$id})'>Excluir</button>`]).draw();
-                            const index = $table.row.add().index();
-                            console.log(index);
-                            const newPage = Math.floor(index / $table.page.len());
-                            $table.page(newPage).draw(false);
-                            $("#completeModal").modal("hide");
+                //adiciona o novo usuário na tela sem precisar atualizar a página
+                $("#listarUsuario").before("<tr id='line_"+$id+"'><th>"+nomeAdd+"</th><td>"+cpfAdd+"</td><td>"+enderecoAdd+"</td><td>"+veiculoAdd+"</td><td>"+telefoneAdd+"</td><td><button class='btn btn-success' onclick='getId("+$id+")'>Editar</button></td><td><button class='btn btn-danger' onclick='remove("+$id+")'>Excluir</button></td></tr>");
+                $("#completeModal").modal("hide");
+
             }
         }).fail(function(response){
             Swal.fire(response.message);
@@ -162,8 +176,13 @@ function openModal(){
 
 // funçao validar cpf
 function validarCPF(cpf) {
+    $("#cpf").css("border-color", "#CCC");
+    $("#telefone").css("border-color", "#CCC");
     cpf = cpf.replace(/[^\d]+/g,'');
-    if (cpf.length != 11 && cpf.length != 14) return false; // o CPF deve ter 11 ou 14 dígitos
+    if (cpf.length != 11 && cpf.length != 14) {
+        $("#cpf").css("border-color", "red");
+        return false;
+     } // o CPF deve ter 11 ou 14 dígitos
     /*if (cpf.length == 14) {// remove a máscara do CPF com 14 dígitos
         // remove a máscara do CPF com 14 dígitos
         cpf = cpf.replace(/\./g, '').replace('-', '');
@@ -196,8 +215,13 @@ function validarCPF(cpf) {
 }
 //funçao para validar telefone
 function validarTelefone(telefone) {
+    $("#cpf").css("border-color", "#CCC");
+    $("#telefone").css("border-color", "#CCC");
     //telefone = telefone.replace(/\s/g, "").replace(/[-()]/g, ""); // remove todos os caracteres não numéricos
-    if (telefone.length != 11 && telefone.length != 14) return false; 
+    if (telefone.length != 11 && telefone.length != 14){
+        $("#telefone").css("border-color", "red");
+        return false; 
+    }
         
     /*// Verifica se o telefone contém apenas números
     if (!/^\d+$/.test(telefone)) {
@@ -237,7 +261,7 @@ function remove(id){
                 data: form,
                 dataType: 'json',
             }).done(function(response){
-                //se for o último registro, mostra a mensagem de nenhum registro encontrado
+                //remover a linha da tabela
                 $("tr#line_"+id).remove();
                 Swal.fire(response.message);
                 if ($("#listarUsuario").children("tr").length == 0){
