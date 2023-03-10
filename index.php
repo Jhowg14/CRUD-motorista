@@ -49,10 +49,11 @@ function escalonamento(){
         $resultado = mysqli_query($connection, $sql);
 
         if($resultado->num_rows > 0){
-            $table ="";
+            //$table ="";
             while($row = $resultado->fetch_assoc()){//enquanto houver dados a serem exibidos, Fetch_assoc() retorna uma matriz associativa de strings que corresponde à linha recuperada, onde cada chave na matriz representa o nome de uma das colunas do conjunto de resultados
                 //exibe os dados
-                $table.= '<tr id="line_'.$row['id'].'">
+                $table[] = $row;
+               /* $table.= '<tr id="line_'.$row['id'].'">
                                 <th id="name_'.$row['id'].'">'.$row['nome'].'</th>
                                 <td>'.$row['cpf'].'</td>
                                 <td>'.$row['endereco'].'</td>
@@ -60,7 +61,7 @@ function escalonamento(){
                                 <td>'.$row['telefone'].'</td>
                                     <td><button class="btn btn-success" onclick="getId('.$row['id'].')">Editar</button></td>
                                     <td><button class="btn btn-danger" onclick="remove('.$row['id'].')">Excluir</button></td>
-                            </tr>';
+                            </tr>';*/
             }
             //retorna os dados
             echo json_encode($table);

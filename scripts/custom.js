@@ -13,36 +13,51 @@ $(document).ready(function(){
     });
 });
 function display_records_in_batches(start, end, batch_size) {
-    if (start > end) {
-        // Todos os registros foram exibidos
+    //barrinha de progresso
+    var progress = Math.floor((start / end) * 100);
+    console.log(progress);
+    $(".progress").css("width", progress + "%");
+
+    //largura da barra de progresso
+    
+    if (start >= end) {
+        // Todos os registros foram exibido
+        $(".progress").css("display", "none");
         return;
     }
-    //batch_size é
     var next = start + batch_size;
-    if (next > end) {
+    if (next >= end) {
         next = end;
     }
-    const url = 'http://localhost:80/GlobalDotCom/index.php';
-    $.post(url, {start: start, batch_size: batch_size, funcao:'esca'}, function(data) {
-        var response = JSON.parse(data);
-        // Adiciona os dados dos registros na página
-        $("#listarUsuario").append(response);
-        
-        // Atualiza a barra de progresso ou mostra uma mensagem de feedback
-        //desbloquear a barra de progresso
-        //$('.progress').css('width', '0%').attr('aria-valuenow', 0);
-        //console.log(response);
-        //faz esperar 1 segundo para exibir os próximos registros
-        
 
-        console.log(next);
-        // Chama a função novamente para exibir os próximos registros
-        //$table = new DataTable('#myTable');
+    const url = 'http://localhost:80/GlobalDotCom/index.php';
+    //executar de forma assíncrona
+    $.post({
+        url: url,
+        data: {start: start, batch_size: batch_size, funcao: 'esca'},
+        async: true,
+        dataType: 'json'
+    }).done(function(response){
+        //adicinoar no datatable os registros
+        for (var i = 0; i < response.length; i++) {
+            //$("#listarUsuario").append("<tr id='line_"+response[i].id+"'><th>"+response[i].nome+"</th><td>"+response[i].cpf+"</td><td>"+response[i].endereco+"</td><td>"+response[i].veiculo+"</td><td>"+response[i].telefone+"</td><td><button class='btn btn-success' onclick='getId("+response[i].id+")'>Editar</button></td><td><button class='btn btn-danger' onclick='remove("+response[i].id+")'>Excluir</button></td></tr>");
+            //colocar id em cada linha
+            $("#myTable").DataTable().row.add([
+                `<b>${response[i].nome}</b>`,
+                response[i].cpf,
+                response[i].endereco,
+                response[i].veiculo,
+                response[i].telefone,
+                "<button class='btn btn-success' onclick='getId("+response[i].id+")'>Editar</button>",
+                "<button class='btn btn-danger' onclick='remove("+response[i].id+")'>Excluir</button></tr>"
+            ]).draw().node().id = "line_"+response[i].id;//node pega o elemento html
+        }
+        
+        // Chamar a função novamente para exibir os próximos registros
         display_records_in_batches(next, end, batch_size);
     });
-     //$table = new DataTable('#myTable');
-    //$('#progress').hide();
 }
+
 
 function showData(pagina){
     var displaydata = "true";
@@ -59,7 +74,6 @@ function showData(pagina){
         success: function(data){
             
             currentPage = paginaAdd;
-            console.log(data);
             display_records_in_batches(0, data, 2);
            
         }
@@ -76,18 +90,17 @@ input.on("keypress", function(){
         input.val(input.val() + "-");
     }
 });
-const input2 = document.getElementById('telefone');
-input2.addEventListener('keypress', () => {
-    let inputlength = input2.value.length;
-
-    if (inputlength === 0) {
-        input2.value += '(';
-    } else if (inputlength === 3) {
-        input2.value += ')';
-    } else if (inputlength === 4) {
-        input2.value += ' ';
-    } else if (inputlength === 9) {
-        input2.value += '-';
+var input2 = $("#telefone");
+input2.on("keypress", function(){
+    var inputlength = input2.val().length;
+    if (inputlength === 0){
+        input2.val(input2.val() + "(");
+    } else if (inputlength === 3){
+        input2.val(input2.val() + ")");
+    } else if (inputlength === 4){
+        input2.val(input2.val() + " ");
+    } else if (inputlength === 9){
+        input2.val(input2.val() + "-");
     }
 });
 //função para cadastrar usuário
@@ -146,9 +159,16 @@ function createUser(){
             //fechar modal
             if (nomeAdd != "" && cpfAdd != "" && enderecoAdd != "" && veiculoAdd != "" && telefoneAdd != "" && response.flag != true){
                 //adiciona o novo usuário na tela sem precisar atualizar a página
-                $("#listarUsuario").before("<tr id='line_"+$id+"'><th>"+nomeAdd+"</th><td>"+cpfAdd+"</td><td>"+enderecoAdd+"</td><td>"+veiculoAdd+"</td><td>"+telefoneAdd+"</td><td><button class='btn btn-success' onclick='getId("+$id+")'>Editar</button></td><td><button class='btn btn-danger' onclick='remove("+$id+")'>Excluir</button></td></tr>");
+                $("#myTable").DataTable().row.add([
+                    `<b>${nomeAdd}</b>`,
+                    cpfAdd,
+                    enderecoAdd,
+                    veiculoAdd,
+                    telefoneAdd,
+                    "<button class='btn btn-success' onclick='getId("+$id+")'>Editar</button>",
+                    "<button class='btn btn-danger' onclick='remove("+$id+")'>Excluir</button></tr>"
+                ]).draw().node().id = "line_"+$id;
                 $("#completeModal").modal("hide");
-
             }
         }).fail(function(response){
             Swal.fire(response.message);
@@ -218,7 +238,7 @@ function validarTelefone(telefone) {
     $("#cpf").css("border-color", "#CCC");
     $("#telefone").css("border-color", "#CCC");
     //telefone = telefone.replace(/\s/g, "").replace(/[-()]/g, ""); // remove todos os caracteres não numéricos
-    if (telefone.length != 11 && telefone.length != 14){
+    if (telefone.length != 14){
         $("#telefone").css("border-color", "red");
         return false; 
     }
@@ -261,8 +281,8 @@ function remove(id){
                 data: form,
                 dataType: 'json',
             }).done(function(response){
-                //remover a linha da tabela
-                $("tr#line_"+id).remove();
+                //remover a linha da datatable
+                $("#myTable").DataTable().row("#line_"+id).remove().draw();
                 Swal.fire(response.message);
                 if ($("#listarUsuario").children("tr").length == 0){
                     $("#listarUsuario").append("<tr id='nenhum'><td colspan='7' style='text-align: center'>Nenhum motorista encontrado</td></tr>");
@@ -331,22 +351,21 @@ function update(){
         ,function(data,status){
         var response = JSON.parse(data);
         Swal.fire(response.message);
-        // verifica qual campo foi alterado
-        if (nome != "" && nome != $("#line_"+id+" th:first").text()){
-            $("#line_"+id+" th:first").text(nome);
-        }
-        if (cpf != "" && cpf != $("#line_"+id+" td").eq(0).text()){
-            $("#line_"+id+" td").eq(0).text(cpf);
-        }
-        if (endereco != "" && endereco != $("#line_"+id+" td").eq(2).text()){
-            $("#line_"+id+" td").eq(1).text(endereco);
-        }
-        if (veiculo != "" && veiculo != $("#line_"+id+" td").eq(3).text()){
-            $("#line_"+id+" td").eq(2).text(veiculo);
-        }
-        if (telefone != "" && telefone != $("#line_"+id+" td").eq(4).text()){
-            $("#line_"+id+" td").eq(3).text(telefone);
-        }
+        // Obtém a linha do DataTable pelo ID
+        var row = $('#myTable').DataTable().row("#line_"+id);
+        // Atualiza os dados da linha
+        row.data([
+            `<b>${nome}</b>`,
+            cpf,
+            endereco,
+            veiculo,
+            telefone,
+            `<button class='btn btn-success' onclick='getId(${id})'>Editar</button>`, 
+            `<button class='btn btn-danger' onclick='remove(${id})'>Excluir</button>`
+        ]).draw(false);
+        // Redesenha a tabela para exibir as atualizações
+        $('#myTable').DataTable().draw(false);
+        //edita a linha do datatable
         $("#completeModal").modal("hide");
     });
 }
