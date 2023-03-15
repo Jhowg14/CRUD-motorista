@@ -30,6 +30,9 @@
         case 'esca':
             escalonamento();
             break;
+        case 'login':
+            login();
+            break;
         default:
             echo json_encode(['message' => 'Ação não definida.']);
             break;
@@ -239,5 +242,34 @@ function editar(){
             }
     }
 }
+function login(){
+    session_start();
+    global $connection;
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
 
+    if(empty($email) || empty($senha)){
+        echo json_encode(["message"=>"Todos os campos são obrigatórios"]);
+    }else{
+        $sql = "SELECT * FROM login_motorista WHERE email = '$email'";
+
+        $result = $connection->query("$sql");
+
+        if($result->num_rows == 0){
+            echo json_encode(["message"=>"Usuário ou senha inválidos", "flag"=>true]);
+        }else{ 
+            $row_usuario = $result->fetch_assoc();
+            if(!password_verify($senha, $row_usuario['senha'])){
+                echo json_encode(["message"=>"Usuário ou senha inválidos", "flag"=>true]);
+            }else{
+                $_SESSION['id'] = $row_usuario['id'];
+                $_SESSION['email'] = $row_usuario['email'];
+                $_SESSION['senha'] = $row_usuario['senha'];
+
+                echo json_encode(["message"=>"Login efetuado com sucesso", "dados"=>$row_usuario, "flag"=>false]);
+            }
+        }
+    }
+}
 ?>
+ 
