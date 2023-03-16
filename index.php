@@ -260,16 +260,21 @@ function login(){
         }else{ 
             $row_usuario = $result->fetch_assoc();
             if(!password_verify($senha, $row_usuario['senha'])){
+                
                 echo json_encode(["message"=>"Usuário ou senha inválidos", "flag"=>true]);
             }else{
                 $_SESSION['id'] = $row_usuario['id'];
                 $_SESSION['email'] = $row_usuario['email'];
                 $_SESSION['senha'] = $row_usuario['senha'];
-
                 echo json_encode(["message"=>"Login efetuado com sucesso", "dados"=>$row_usuario, "flag"=>false]);
             }
         }
     }
+}
+function logout(){
+    session_start();
+    session_destroy();
+    echo json_encode(["message"=>"Logout efetuado com sucesso"]);
 }
 ?>
  
