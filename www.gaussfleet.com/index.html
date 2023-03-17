@@ -200,6 +200,9 @@
                   >Contato</a
                 >
               </li>
+              <li class="nav-item">
+                <a id="buttonCadastar" class="nav-link">Cadastrar</a>
+              </li>
             </ul>
           </div>
           <!-- end navbar-collapse -->
@@ -213,17 +216,18 @@
   <div class="container home-content">
     <h1><span class="gauss-brand-">Muito além da <span class="color-gauss-red">Telemetria</span></span>...</h1>
     <h3>Bem vindo ao <span class="gauss-brand-text">Gauss<span class="color-gauss-red">Fleet</span></span></h3>
-    <a href="#loginModal" class="btn btn-theme" data-toggle="modal" data-target="#loginModal">Login</a>
+    <a href="#loginModal" class="btn btn-theme" id="modalLogin">Login</a><br>
     <br>
 
   </div>
 </div>
+
 <!--Modal-->
 <div class="modal align-items-center" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true" style=" padding-top: 10%">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+        <h5 class="modal-title" id="tituloModal">Login</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -240,7 +244,7 @@
                 <input type="password" class="form-control" id="senha" placeholder="Password">
               </div>
               <div class="mb-3" style="text-align: center;">
-              <button type="button" class="btn btn-outline-primary bt-sm" id="buttonLogin" style="padding: 5px;">
+              <button type="button" class="btn btn-outline-primary bt-sm" id="buttonModal" style="padding: 5px;">
                 Entrar
               </button>
               </div>
@@ -688,51 +692,150 @@
     // componentDidmount();
 
     </script>
+    <!--Login-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
           <script>
             $(document).ready(function(){
-              $('#buttonLogin').click(function(){
-                var email = $('#Email').val();
-                var senha = $('#senha').val();
-                if(email == ''){
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Preencha o campo email!',
-                  })
-                }else if(senha == ''){
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Preencha o campo senha!',
-                  })
-                }else{
-                  $.ajax({
-                    url: 'http://localhost:80/GlobalDotCom/index.php',
-                    type: 'POST',
-                    data: {email: email, senha: senha, funcao:'login'},
-                    dataType: 'json',
-                    success: function(data){
-                      //verifica a flag de login
-                      if(data.flag == true){
-                        Swal.fire(data.message);
+              $('#modalLogin').click(function(){
+                $('#tituloModal').text('Login');
+                $('#divCadastro').remove();
+                $('#loginModal').modal('show');
+                $('#buttonModal').text('entrar').attr("onclick", "login()");
+              });
+            });
+            function login(){
+                  var email = $('#Email').val();
+                  var senha = $('#senha').val();
+
+                  if(email == '' || senha == ''){
+                    Swal.fire('Preencha todos os campos');
+                  }else{
+                    $.ajax({
+                      url: 'http://localhost:80/GlobalDotCom/index.php',
+                      type: 'POST',
+                      data: {email: email, senha: senha, funcao:'login'},
+                      dataType: 'json',
+                      success: function(data){
+                        console.log(data);
+                        //verifica a flag de login
+                        if(data.flag == true){
+                          Swal.fire(data.message);
+                        }
+                        if(data.flag != true){
+                          $(location).attr('href', 'http://localhost:80/GlobalDotCom/view/index.html');
+                        } 
                       }
-                      if(data.flag != true){
-                        $(location).attr('href', 'http://localhost:80/GlobalDotCom/view/index.html');
-                      }
-                      $('#loginModal').modal('hide');
-                      //limpa os campos
-                      $('#Email').val('');
-                      $('#senha').val('');
-                      //se estiver logado, mostra o botão de sair
-                    }
-                  })
+                    })
+                  }
+                  $('#Email').val('');
+                  $('#senha').val('');
+                  $('#cadastro').remove();
+                  $('#loginModal').modal('hide');
                 }
-              })
-            })
           </script>
-    
-    
+          <!--Cadastro-->
+          <script>
+            $(document).ready(function(){
+              $('#buttonCadastar').click(function(){
+                //remove input nome do modal de login
+                $('#tituloModal').text('Cadastrar');
+                $('#divCadastro').remove();
+                $('#buttonModal').text('Cadastrar').attr('onclick', 'cadastrar()');
+                //adiciona input nome apenas no modal de cadastro
+                $('#loginForm').prepend('<div id="divCadastro" class="form-group"><label for="nome">Nome<span style="color: red">*</span></label><input type="text" class="form-control" id="nome" placeholder="Nome"></div>');
+                $('#loginModal').modal('show');
+              });
+            });
+            function cadastrar(){
+                  var nome = $('#nome').val();
+                  var email = $('#Email').val();
+                  var senha = $('#senha').val();
+                  if(email == '' || senha == '' || nome == ''){
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Preencha todos os campos!',
+                  })
+
+                  }else{
+                    $.ajax({
+                      url: 'http://localhost:80/GlobalDotCom/index.php',
+                      type: 'POST',
+                      data: {nome: nome,email: email, senha: senha, funcao:'cadastrar'},
+                      dataType: 'json',
+                      success: function(data){
+                        //verifica a flag de login
+                        if(data.flag == true){
+                          Swal.fire(data.message);
+                        }
+                        if(data.flag == false){
+                          $('#loginForm').prepend('<div id="cadastro" class="alert alert-success" role="alert">Cadastrado com sucesso! Faça login</div>');
+                          $('#modalLogin').click();
+                          //colocar mensagem de cadastro realizado com sucesso
+                        }
+                        //limpa os campos
+                        
+                        //volta o botão para login
+                       
+                        //remove o input nome
+                      }
+                    })
+                    $('#Email').val('');
+                    $('#senha').val('');
+                    $('#cadastro').remove();
+                    $('#loginModal').modal('hide');
+                  } 
+                }
+          </script>
+          <!--Recuperar Senha-->
+          <script>
+            $(document).ready(function(){
+              $('#buttonRecuperar').click(function(){
+                $('#tituloModal').text('Recuperar Senha');
+                $('#divCadastro').remove();
+                $('#buttonModal').text('Recuperar').attr('onclick', 'recuperar()');
+                $('#loginForm').prepend('<div id="divCadastro" class="form-group"><label for="nome">Email<span style="color: red">*</span></label><input type="text" class="form-control" id="email" placeholder="Email"></div>');
+                $('#loginModal').modal('show');
+              });
+            });
+            function recuperar(){
+                  var email = $('#email').val();
+                  if(email == ''){
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Todos os campos devem ser preenchidos!',
+                  })
+                  }else{
+                    $.ajax({
+                      url: 'http://localhost:80/GlobalDotCom/index.php',
+                      type: 'POST',
+                      data: {email: email, funcao:'recuperar'},
+                      dataType: 'json',
+                      success: function(data){
+                        //verifica a flag de login
+                        if(data.flag == true){
+                          Swal.fire(data.message);
+                        }
+                        if(data.flag == false){
+                          $('#loginForm').prepend('<div id="cadastro" class="alert alert-success" role="alert">Cadastrado com sucesso! Faça login</div>');
+                          $('#modalLogin').click();
+                          //colocar mensagem de cadastro realizado com sucesso
+                        }
+                        //limpa os campos
+                        
+                        //volta o botão para login
+                       
+                        //remove o input nome
+                      }
+                    })
+                    $('#Email').val('');
+                    $('#senha').val('');
+                    $('#cadastro').remove();
+                    $('#loginModal').modal('hide');
+                  } 
+                }
+          </script>
   </body>
 
 <!-- Mirrored from www.gaussfleet.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Mar 2023 13:08:11 GMT -->

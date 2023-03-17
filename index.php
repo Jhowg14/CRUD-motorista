@@ -1,5 +1,5 @@
 <?php
- header("Ace-Access-Control-Allow-Origin: *");//permite que o script seja executado em qualquer domínio
+    header("Ace-Access-Control-Allow-Origin: *");//permite que o script seja executado em qualquer domínio
     $host="localhost";
     $user="root";
     $password="";
@@ -16,7 +16,7 @@
             read();
             break;
         case 'cadastro':
-            cadastro();
+            addMotorista();
             break;
         case 'update':
             editar();
@@ -32,6 +32,12 @@
             break;
         case 'login':
             login();
+            break;
+        case 'logout':
+            logout();
+            break;
+        case 'cadastrar':
+            cadastrar();
             break;
         default:
             echo json_encode(['message' => 'Ação não definida.']);
@@ -123,7 +129,7 @@ function read(){
     }
 }
 //chama a função cadastrado
-function cadastro(){
+function addMotorista(){
     global $connection;
         // Verifica se o usuário está logado
     session_start();
@@ -276,5 +282,33 @@ function logout(){
     session_destroy();
     echo json_encode(["message"=>"Logout efetuado com sucesso"]);
 }
+function cadastrar(){
+    global $connection;
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    $senha = password_hash($senha, PASSWORD_DEFAULT);
+
+    if(empty($email) || empty($senha)|| empty($nome)){
+        echo json_encode(["message"=>"Todos os campos são obrigatórios"]);
+    }else{
+        $sql = "SELECT * FROM login_motorista WHERE email = '$email'";
+
+        $result = $connection->query("$sql");
+
+        if($result->num_rows > 0){
+            echo json_encode(["message"=>"Email já cadastrado", "flag"=>true]);
+        }else{ 
+            $sql = "INSERT INTO login_motorista (nome, email, senha) VALUES ('$nome', '$email', '$senha')";
+            $result = $connection->query("$sql");
+            if($result){
+                echo json_encode(["message"=>"Usuário cadastrado com sucesso","flag"=>false]);
+            }else{
+                echo json_encode(["message"=>"Erro ao cadastrar usuário","flag"=>true]);
+            }
+        }
+    }
+}
+#emitir dados quem está logado
 ?>
  
