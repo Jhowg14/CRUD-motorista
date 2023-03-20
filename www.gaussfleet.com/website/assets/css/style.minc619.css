@@ -4624,3 +4624,133 @@ a.list-group-item.active,a.list-group-item.active:focus,a.list-group-item.active
 .theme-panel.active{
     right:0
 }
+#content {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    align-items: center;
+    border: none;
+    box-shadow: 0 1rem 3rem rgba(55,60,67,.175);
+    margin: 10px;
+    padding: 20px;
+    width: 285px;
+    min-height: 435px;
+    
+}
+p, h3 {
+    text-align: center;
+    font-family: inherit;
+}
+
+form {
+    width: 100%;
+    /* margin-bottom: 20px; */
+}
+
+.form-control{
+    text-align: left;
+    height: 20px;
+    padding: 5px;
+    border: 1px solid rgba(0, 0, 0, .07);
+    border-radius: 5px;
+    font-size: 13px;
+    flex-grow: 1;
+}
+.form-control:focus {
+    border-color: #177bbb;
+}
+
+.fields {
+    padding: 7px;
+    display: flex;
+}
+
+#btn-submit-login, #btn-submit-reset-pass{
+    border: none;
+    border-radius: 5px;
+    background: #2b5876;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    width: 100%;
+    height: 40px;
+    border-radius: .5625rem;
+}
+
+#btn-submit-login:hover, #btn-submit-reset-pass:hover {
+    box-shadow: 0 10px;
+}
+h3{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.teste {
+    margin-bottom: 30px;
+}
+#forgot-password, #back-login {
+    color: #4d627b;
+    padding-top: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+
+}
+#forgot-password:hover, #back-login:hover {
+    text-decoration: underline;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.55rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #75868f;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1pxsolidrgba(0,0,0,.07);
+    appearance: none;
+    border-radius: 0.4375rem;
+    box-shadow: inset 0 1px 2px rgb(55 60 67 / 8%);
+    transition: border-color .35s ease-in-out,box-shadow .35s ease-in-out;
+}
+
+.btn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.login img{
+    max-height: 280px;
+    max-width: 284px;
+}
+
+.login{
+    max-height: 280px;
+    max-width: 400px;
+    min-width: 380px;
+    width: 50%;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+form input:focus {/* remove the blue border and shadow when focused */
+    outline: none;
+}
+
+footer {
+    display: flex;
+    width: 100%;
+    position: relative;
+    bottom: -15px;
+}
+
+#version {
+    margin: 10px 0 0 auto;
+}

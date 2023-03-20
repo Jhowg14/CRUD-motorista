@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if(!isset($_SESSION['id']) && !isset($_SESSION['nome'])){
+        header('Location: http://localhost:80/GlobalDotCom/www.gaussfleet.com/index.html');
+        exit; 
+    }
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -118,16 +126,19 @@
       <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; height: 5px;">
     </div>  
     </div>
-    <div id="nomeEmitir " ></div>
-    <button onclick="logout()" id="myBtn" title="Go to top">Sair</button>
     <div  class="container my-3">
       <img id="logo" class="text-center" src="http://localhost:80/GlobalDotCom//img/logo.jpg" style="display: block; margin: auto;"height="100">
+    </div>
+    <div id="nomeEmitir ">
+      <h3 class="text-center" style="font-size:19px;
+    text-align:center ;">Bem vindo, <?php echo $_SESSION['nome']; ?></h3>
     </div>
     <div class='container p-3'>
       <!-- Botão para acionar modal -->
       <button type='button' id='botaoCadastrar' class='btn btn-primary'>
       Cadastrar
       </button>
+      <button class='btn btn-danger' onclick="logout()" id="myBtn" style="text-align: right; float: right;">Sair</button>
     </div>
     
     <div class="container">
@@ -156,6 +167,16 @@
     <!-- Font Awesome JS-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+    <script>
+        <?php
+        // Verifica se o usuário está logado usando JavaScript
+        if (isset($_SESSION['nome'])) {
+            echo "console.log('Usuário logado');";
+        } else {
+            echo "window.location.href = 'http://localhost:80/GlobalDotCom/www.gaussfleet.com/';"; // Redireciona para a página de login
+        }
+        ?>
+    </script>
     <script>
       var currentPage = 1;
       $(document).ready(function(){
@@ -546,21 +567,5 @@ function update(){
     });
   }
 </script>
-<script>
-  //emite dados de quem está logado
-  function emitir(){
-    const url = 'http://localhost:80/GlobalDotCom/index.php';
-    $.post(url,
-           {
-        funcao:'emitir'
-           }
-        ,function(data,status){
-        var response = JSON.parse(data);
-        $("#nomeEmitir").text(response.nome);
-    });
-  }
-</script>
-
-    
   </body>
 </html>

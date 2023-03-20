@@ -249,7 +249,6 @@ function editar(){
     }
 }
 function login(){
-    session_start();
     global $connection;
     $email = $_POST['email'];
     $senha = $_POST['senha'];
@@ -269,9 +268,12 @@ function login(){
                 
                 echo json_encode(["message"=>"Usuário ou senha inválidos", "flag"=>true]);
             }else{
+                // Inicia a sessão
+                session_start();
                 $_SESSION['id'] = $row_usuario['id'];
+                $_SESSION['nome'] = $row_usuario['nome'];
                 $_SESSION['email'] = $row_usuario['email'];
-                $_SESSION['senha'] = $row_usuario['senha'];
+                
                 echo json_encode(["message"=>"Login efetuado com sucesso", "dados"=>$row_usuario, "flag"=>false]);
             }
         }

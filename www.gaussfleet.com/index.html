@@ -12,7 +12,7 @@
     />
     <meta content="" name="description" />
     <meta content="GlobalDotCom" name="author" />
-
+    
     <link
       rel="apple-touch-icon"
       sizes="57x57"
@@ -103,6 +103,7 @@
       rel="stylesheet"
     />
     <link href="website/assets/css/style.minc619.css?v=1.0" rel="stylesheet" />
+
     <link href="website/assets/css/custom.css" rel="stylesheet" />
     <link
       href="gauss/assets/plugins/sweetalert/sweetalert.css"
@@ -223,8 +224,9 @@
 </div>
 
 <!--Modal-->
-<div class="modal align-items-center" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true" style=" padding-top: 10%">
-  <div class="modal-dialog" role="document">
+
+<div class="modal align-items-center" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true" style=" padding-top: 5%">
+  <div class="modal-dialog" role="document" style="width:400px">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="tituloModal">Login</h5>
@@ -232,28 +234,42 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-          <form id="loginForm">
-              <div class="form-group">
-                <label for="Email">Seu email<span style="color:red">*</span></label>
-                <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter email">
-                <small id="emailHelp" class="form-text text-muted">Coloque seu emial no formato "nome@email.com"</small>
+      
+          <div id="content" style="width: 100%; margin: 0px;">
+              <div class="login">
+                  <div class="logo-customer">
+                      <img src="/GlobalDotCom/img/logo.jpg" alt="GaussFleet" class="img-fluid">
+                  </div>
               </div>
-              <div class="form-group">
-                <label for="senha">Senha<span style="color:red">*</span></label>
-                <input type="password" class="form-control" id="senha" placeholder="Password">
+              <div class="teste">
+                  <h3 class="h3">Bem vindo ao GaussFleet</h3>
+                  <p>Faça abaixo seu login</p>
               </div>
-              <div class="mb-3" style="text-align: center;">
-              <button type="button" class="btn btn-outline-primary bt-sm" id="buttonModal" style="padding: 5px;">
-                Entrar
-              </button>
+              
+              <form id="form_login">
+  
+                  <div class="fields">
+                      <input type="email"id="Email" class="form-control" placeholder="Seu Email" autofocus name="username">
+                  </div>
+  
+                  <div class="fields">
+                      <input type="password" id="senha" class="form-control" placeholder="Sua Senha" name="password">
+                  </div>
+  
+                  <div class="fields btn" style="width: 100%; margin: 0 auto;">
+                      <button id="btn-submit-login" onclick="login()" type="button">Entrar</button>
+                  </div>
+              </form>
+  
+              <div style="padding-bottom: 10px;">
+                  <a href="#loginModal" class="" id="forgot-password">Esqueceu sua senha?</a>
               </div>
-            </form>
+              <footer>
+                  <p id="version">v<strong>1.0</strong></p>
+              </footer>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
 </div>
 
 
@@ -697,10 +713,15 @@
           <script>
             $(document).ready(function(){
               $('#modalLogin').click(function(){
+                $('#Email').val('');
+                $('#senha').val('');
+                $('#cadastro').remove();
+                $(".teste p").text("Faça abaxio seu Login ");
                 $('#tituloModal').text('Login');
                 $('#divCadastro').remove();
+                $('#forgot-password').text('Esqueceu sua senha?');
                 $('#loginModal').modal('show');
-                $('#buttonModal').text('entrar').attr("onclick", "login()");
+                $('#btn-submit-login').text('entrar').attr("onclick", "login()");
               });
             });
             function login(){
@@ -722,28 +743,31 @@
                           Swal.fire(data.message);
                         }
                         if(data.flag != true){
-                          $(location).attr('href', 'http://localhost:80/GlobalDotCom/view/index.html');
+                          $(location).attr('href', 'http://localhost:80/GlobalDotCom/view/index.php');
                         } 
                       }
                     })
                   }
-                  $('#Email').val('');
-                  $('#senha').val('');
-                  $('#cadastro').remove();
-                  $('#loginModal').modal('hide');
                 }
           </script>
           <!--Cadastro-->
           <script>
             $(document).ready(function(){
+              
               $('#buttonCadastar').click(function(){
+                $('#Email').val('');
+                $('#senha').val('');
+                $(".teste p").text("Faça abaxio seu Cadastro");
                 //remove input nome do modal de login
-                $('#tituloModal').text('Cadastrar');
+                $('#tituloModal').text('Cadastro');
                 $('#divCadastro').remove();
-                $('#buttonModal').text('Cadastrar').attr('onclick', 'cadastrar()');
-                //adiciona input nome apenas no modal de cadastro
-                $('#loginForm').prepend('<div id="divCadastro" class="form-group"><label for="nome">Nome<span style="color: red">*</span></label><input type="text" class="form-control" id="nome" placeholder="Nome"></div>');
                 $('#loginModal').modal('show');
+                $('#btn-submit-login').text('Cadastrar').attr('onclick', 'cadastrar()');
+                //adiciona input nome apenas no modal de cadastro
+                $('#form_login').prepend('<div class="fields" id="divCadastro"><input type="text" class="form-control" placeholder="Seu nome" id="nome"></div>');
+                //troca o esqueci minha senha por ja sou cadastrado
+                $('#forgot-password').text('Já sou cadastrado').attr('onclick', "$('#modalLogin').click()");
+
               });
             });
             function cadastrar(){
@@ -769,70 +793,12 @@
                           Swal.fire(data.message);
                         }
                         if(data.flag == false){
-                          $('#loginForm').prepend('<div id="cadastro" class="alert alert-success" role="alert">Cadastrado com sucesso! Faça login</div>');
-                          $('#modalLogin').click();
+                          $(location).attr('href', 'http://localhost:80/GlobalDotCom/view/index.php');
                           //colocar mensagem de cadastro realizado com sucesso
                         }
-                        //limpa os campos
-                        
-                        //volta o botão para login
-                       
-                        //remove o input nome
                       }
                     })
-                    $('#Email').val('');
-                    $('#senha').val('');
-                    $('#cadastro').remove();
-                    $('#loginModal').modal('hide');
-                  } 
-                }
-          </script>
-          <!--Recuperar Senha-->
-          <script>
-            $(document).ready(function(){
-              $('#buttonRecuperar').click(function(){
-                $('#tituloModal').text('Recuperar Senha');
-                $('#divCadastro').remove();
-                $('#buttonModal').text('Recuperar').attr('onclick', 'recuperar()');
-                $('#loginForm').prepend('<div id="divCadastro" class="form-group"><label for="nome">Email<span style="color: red">*</span></label><input type="text" class="form-control" id="email" placeholder="Email"></div>');
-                $('#loginModal').modal('show');
-              });
-            });
-            function recuperar(){
-                  var email = $('#email').val();
-                  if(email == ''){
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Oops...',
-                      text: 'Todos os campos devem ser preenchidos!',
-                  })
-                  }else{
-                    $.ajax({
-                      url: 'http://localhost:80/GlobalDotCom/index.php',
-                      type: 'POST',
-                      data: {email: email, funcao:'recuperar'},
-                      dataType: 'json',
-                      success: function(data){
-                        //verifica a flag de login
-                        if(data.flag == true){
-                          Swal.fire(data.message);
-                        }
-                        if(data.flag == false){
-                          $('#loginForm').prepend('<div id="cadastro" class="alert alert-success" role="alert">Cadastrado com sucesso! Faça login</div>');
-                          $('#modalLogin').click();
-                          //colocar mensagem de cadastro realizado com sucesso
-                        }
-                        //limpa os campos
-                        
-                        //volta o botão para login
-                       
-                        //remove o input nome
-                      }
-                    })
-                    $('#Email').val('');
-                    $('#senha').val('');
-                    $('#cadastro').remove();
-                    $('#loginModal').modal('hide');
+                    
                   } 
                 }
           </script>
