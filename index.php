@@ -39,10 +39,27 @@
         case 'cadastrar':
             cadastrar();
             break;
+        case 'getVeiculo':
+            getVeiculo();
+            break;
         default:
             echo json_encode(['message' => 'Ação não definida.']);
             break;
     }
+
+//funçao para abrir informaçoes veiculo
+function getVeiculo(){
+    global $connection;
+    $id = $_POST['id'];
+    $sql = "SELECT * FROM veiculo WHERE id = $id";
+    $resultado = mysqli_query($connection, $sql);
+    if($resultado->num_rows > 0){
+        $row = $resultado->fetch_assoc();
+        echo json_encode($row);
+    }else{
+        echo json_encode(['message' => 'Nenhum registro encontrado.']);
+    }
+}
 //funçao realiza escalonamento de dados
 function escalonamento(){
     global $connection;
@@ -57,9 +74,18 @@ function escalonamento(){
         //executa a query
         $resultado = mysqli_query($connection, $sql);
 
+        
+
         if($resultado->num_rows > 0){
             //$table ="";
             while($row = $resultado->fetch_assoc()){//enquanto houver dados a serem exibidos, Fetch_assoc() retorna uma matriz associativa de strings que corresponde à linha recuperada, onde cada chave na matriz representa o nome de uma das colunas do conjunto de resultados
+                //busca o modelo do veiculo
+                $sql = "SELECT veiculo.modelo FROM motoristas
+                        INNER JOIN veiculo ON motoristas.veiculo_id = veiculo.id
+                        WHERE motoristas.id = ".$row['id'];
+
+                $modelo = mysqli_query($connection, $sql);
+                $row['modelo'] = $modelo->fetch_assoc()['modelo'];
                 //exibe os dados
                 $table[] = $row;
                /* $table.= '<tr id="line_'.$row['id'].'">
@@ -152,8 +178,12 @@ function addMotorista(){
             // Se o CPF já estiver cadastrado, exibe uma mensagem
             echo json_encode(["message"=>"CPF já cadastrado","flag"=>true]);
         } else {
+            //pega o modelo do veiculo
+            $sql = "SELECT modelo FROM veiculos WHERE modelo = '$veiculo'";
+            $result = $connection -> query($sql);
+            $idVeiculo = $result->fetch_assoc()['id'];
             // Insere os dados no banco
-            $sql = "INSERT INTO motoristas (nome, cpf, endereco, veiculo, telefone, excluido, datadecriacao) VALUES ('$nome', '$cpf', '$endereco', '$veiculo', '$telefone', false, '$datadecriacao')";
+            $sql = "INSERT INTO motoristas (nome, cpf, endereco, veiculo_id, telefone, excluido, datadecriacao) VALUES ('$nome', '$cpf', '$endereco', '$idVeiculo', '$telefone', false, '$datadecriacao')";
             // Se os dados forem inseridos com sucesso
             
             // Executa a query
@@ -202,7 +232,7 @@ function pegarId(){
     if(empty($id)){
         echo json_encode(["message"=>"Sem id válido"]);
     }else {
-        $sql = "SELECT id, nome, cpf, endereco, veiculo,telefone FROM motoristas WHERE id = $id";
+        $sql = "SELECT id, nome, cpf, endereco,telefone FROM motoristas WHERE id = $id";
         $response = $connection -> query($sql);
         $rows = array();
 
@@ -238,10 +268,15 @@ function editar(){
             if ($response->num_rows > 0 and $response->fetch_assoc()['id'] != $id) {
                 echo json_encode(["message"=>"CPF já cadastrado"]);
             } else {
-                $sql = "UPDATE motoristas SET nome = '$nome', cpf = '$cpf', endereco = '$endereco', veiculo = '$veiculo', telefone = '$telefone', datadeatualizacao = '$datadeatualizacao' WHERE id = $id";
+                $sql = "UPDATE motoristas SET nome = '$nome', cpf = '$cpf', endereco = '$endereco', telefone = '$telefone', datadeatualizacao = '$datadeatualizacao' WHERE id = $id";
+                $result = $connection->query( $sql);
+                $sql = "SELECT id FROM veiculo WHERE modelo = '$veiculo'";
+                $result = $connection->query( $sql);
+                $veiculoID = $result->fetch_assoc()['id'];
+                $sql = "UPDATE motoristas SET veiculo_id='$veiculoID' WHERE id = '$id'";
                 $result = $connection->query( $sql);
                 if($result){
-                    echo json_encode(["message" => "Cliente atualizado com sucesso."]);
+                    echo json_encode(["message" => "Cliente atualizado com sucesso.",'idVeiculo'=>$veiculoID]);
                 }else{
                     echo json_encode(["message" => "Erro ao atualizar cliente."]);
                 }
@@ -313,4 +348,3 @@ function cadastrar(){
 }
 #emitir dados quem está logado
 ?>
- 
