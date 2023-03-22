@@ -54,12 +54,8 @@
                       <label class="form-label">Veiculo<span style="color:red">*</span></label>
                       <!--fazer select de veiculos-->
                       <select class="form-control" id="veiculo" type="text">
-                          <option value="">Selecione veiculo</option>
-                          <option value="Guincho">Guincho</option>
-                          <option value="Trator">Trator</option>
-                          <option value="Caminhao">Caminhao</option>
-                          <option value="Empilhadeira">Empilhadeira</option>
-                          <option value="Guindaste">Guindaste</option>
+                          <!--chama funcao para listar veiculos-->
+                          <option value="">Selecione um veiculo</option>
                       </select>
                   </div>
                   <div class="col-md-6">
@@ -92,7 +88,12 @@
       <button type='button' id='botaoCadastrar' class='btn btn-primary'>
       Cadastrar
       </button>
+      <!--botao saie-->
       <button class='btn btn-danger' onclick="logout()" id="myBtn" style="text-align: right; float: right;">Sair</button>
+      <!-- Botao adicinoar veiculo -->
+      <button class='btn btn-theme'id="addVeiculo" onclick="addVeiculo()" style="text-align: right; float: right; margin-right: 10px;">
+      Adicionar <span class='fa fa-truck'></span>
+      </button>
     </div>
     
     <div class="container" style="margin-bottom: 20px;">
@@ -134,9 +135,7 @@
     <script>
       var currentPage = 1;
       $(document).ready(function(){
- 
       showData(currentPage);
-    
       //quando eu clico no botão de cadastrar, eu chamo a função openModal
       $("#botaoCadastrar").attr("onclick","openModal()");
       
@@ -146,7 +145,66 @@
           }
       });
     });
-
+    //funcao que adiciona veiculo
+    function addVeiculo(){
+      Swal.fire({
+        title: 'Adicionar veiculo',
+        html: '<input id="modelo" class="swal2-input" style="heigth:2em;" placeholder="Modelo">' +
+              '<input id="ano" class="swal2-input" placeholder="Ano">' +
+              '<input id="marca" class="swal2-input" placeholder="Marca">' +
+              '<input id="placa" class="swal2-input" placeholder="Placa">',
+        showCancelButton: true,
+        confirmButtonText: 'Adicionar',
+        cancelButtonText: 'Cancelar',
+        showLoaderOnConfirm: true,
+        //diminuir o tamanho do modal
+        width: 400,
+        preConfirm: () => {
+          const modelo = Swal.getPopup().querySelector('#modelo').value
+          const ano = Swal.getPopup().querySelector('#ano').value
+          const marca = Swal.getPopup().querySelector('#marca').value
+          const placa = Swal.getPopup().querySelector('#placa').value
+          if (!modelo || !ano || !marca || !placa) {
+            Swal.showValidationMessage(`Por favor, preencha todos os campos`)
+          }
+          return {modelo: modelo, ano: ano, marca: marca, placa: placa}
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            console.log(result);
+            if (result.isConfirmed) {
+                $.post({
+                url: 'http://localhost:80/GlobalDotCom/index.php',
+                data: {funcao: 'cadastrarVeiculo',
+                        modelo: result.value.modelo,
+                        ano: result.value.ano,
+                        marca: result.value.marca,
+                        placa: result.value.placa},
+                async: true,
+                dataType: 'json'
+                }).done(function(response){
+                    swal.fire(response.message);
+                });
+            }
+        })
+    }
+    //funçao que pega veiculos do banco de dados
+    function getVeiculos(){
+      const url = 'http://localhost:80/GlobalDotCom/index.php';
+      $.post({
+          url: url,
+          data: {funcao: 'getVeiculos'},
+          async: true,
+          dataType: 'json'
+      }).done(function(response){
+            //remover todos os options menos a 0
+            $("#veiculo option").remove();
+            $("#veiculo").append("<option value='0'>Selecione um veiculo</option>");
+          for (var i = 0; i < response.length; i++) {
+              $("#veiculo").append("<option value='"+response[i].id+"'>"+response[i].modelo+" "+response[i].placa+"</option>");
+          }
+      });
+    }
     function read(start, end, batch_size) {
       //barrinha de progresso
       var progress = Math.floor((start / end) * 100);
@@ -317,7 +375,7 @@
                         `<b>${nomeAdd}</b>`,
                         cpfAdd,
                         enderecoAdd,
-                        veiculoAdd,
+                        `${response.veiculo['modelo']}<span style=' font-size :80%; padding: 4px;text-align: right; float: right' class='fa fa-eye' onclick='getVeiculo(${response.veiculo['id']})'></span>`,
                         telefoneAdd,
                         "<button class='btn btn-success' onclick='getId("+$id+")'>Editar</button>",
                         "<button class='btn btn-danger' onclick='remove("+$id+")'>Excluir</button></tr>"
@@ -334,6 +392,7 @@
     function openModal(){
         //alterar titulo do modal
         $("#botaoModal").text("Cadastrar").attr("onclick", "createUser()");
+        getVeiculos();
         $("#cpf").css("border-color", "#CCC");
         $("#telefone").css("border-color", "#CCC");
         //limpar campos do modal
@@ -343,7 +402,6 @@
             //colocar o select na primeira opção
             $("#veiculo").val("");
             $("#telefone").val("");
-        
         $("#completeModal").modal("show");
     }
 
@@ -459,6 +517,8 @@
             function(data,status){
                 
                 var userid=JSON.parse(data);
+                getVeiculos();
+                //console.log(userid);
                 $("#id").val(id);
                 $("#tituloModal").text("Editar Motorista");
                 //mudar o botão de cadastrar para editar e mudar a função do botão
@@ -466,7 +526,7 @@
                 $("#nome").val(userid.nome);
                 $("#cpf").val(userid.cpf);
                 $("#endereco").val(userid.endereco);
-                $("#veiculo").val("");
+                $("#veiculo").val(userid.veiculo_id);
                 $("#telefone").val(userid.telefone);
                 $("#completeModal").modal("show"); 
             });
@@ -503,8 +563,9 @@
             funcao:'update'
               }
             ,function(data,status){
-            console.log(data);   
+             
             var response = JSON.parse(data);
+            console.log(response);
             Swal.fire(response.message);
             //se algum campo nao foi preenchiado, nao adiciona
             if (nome == "" || cpf == "" || endereco == "" || telefone == "" || veiculo == ""){
@@ -517,7 +578,7 @@
                 `<b>${nome}</b>`,
                 cpf,
                 endereco,
-                `${veiculo}<span style=' font-size :80%; padding: 4px;text-align: right; float: right;' onclick='getVeiculo(${response.idVeiculo})' class="fa fa-eye"></span></button>`,
+                `${response.Veiculo['modelo']}<span style=' font-size :80%; padding: 4px;text-align: right; float: right;' onclick='getVeiculo(${veiculo})' class="fa fa-eye"></span></button>`,
                 telefone,
                 `<button class='btn btn-success' onclick='getId(${id})'>Editar</button>`, 
                 `<button class='btn btn-danger' onclick='remove(${id})'>Excluir</button>`
