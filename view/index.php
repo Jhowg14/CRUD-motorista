@@ -41,10 +41,10 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     <div class="card p-2">
                         <div class="row g-3">
                             <div class="col-md-6">
+                             <form id="form" method="POST" >
                                 <input id="id" type="text" hidden />
                                 <label for="" class="form-label">Nome<span style="color:red">*</span></label>
-                                <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva"
-                                    required>
+                                <input class="form-control" id="nome" type="text" placeholder="Ex: Pedro Silva" required >
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">CPF<span style="color:red">*</span></label>
@@ -68,6 +68,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                                 <input class="form-control" id="telefone" type="tel" maxlength="14"
                                     placeholder="Número com DDD">
                             </div>
+                        </form>
                         </div>
                     </div><span style="color:rgb(24, 25, 26) ;font-size: 10px">campos obrigatórios <span
                             style="color:red">*</span></span>
@@ -180,7 +181,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
         function addVeiculo() {
             Swal.fire({
                 title: 'Adicionar veiculo',
-                html: '<select id="select" class="swal2-input" placeholder="Selecione um veiculo">' +
+                html:'<select id="select" class="swal2-input">' +
                     '<option value="Trator">Trator</option>' +
                     '<option value="Caminhao">Caminhao</option>' +
                     '<option value="Guindaste">Guindaste</option>'+
@@ -238,7 +239,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
             }).done(function (response) {
                 //remover todos os options menos a 0
                 $("#veiculo option").remove();
-                $("#veiculo").append("<option value='0'>Selecione um veiculo</option>");
+                $("#veiculo").append("<option value= "+0+">Selecione um veiculo</option>");
                 for (var i = 0; i < response.length; i++) {
                     $("#veiculo").append("<option value="+response[i].id+">"+ response[i].modelo +" "+ response[i].placa + "</option>");
                 }
@@ -560,11 +561,12 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     id: id,
                     funcao: 'getId'
                 },
-                function (data, status) {
-
-                    var userid = JSON.parse(data);
+                function (response, status) {
+                    var data = JSON.parse(response);
+                    var userid = data.rows;
+                    
                     getVeiculos();
-                    console.log(userid);
+                    console.log(userid.veiculo_id);
                     $("#id").val(id);
                     $("#tituloModal").text("Editar Motorista");
                     //mudar o botão de cadastrar para editar e mudar a função do botão
@@ -572,8 +574,9 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     $("#nome").val(userid.nome);
                     $("#cpf").val(userid.cpf);
                     $("#endereco").val(userid.endereco);
-                    //slecionar o id do veiculo no select 
-                    $("#veiculo").val("3");
+                    //selecionar a option do id do veiculo  
+                    //seleciona a option do id do veiculo
+                    $("#veiculo").val(userid.veiculo_id);
                     $("#telefone").val(userid.telefone);
                     $("#completeModal").modal("show");
                 });

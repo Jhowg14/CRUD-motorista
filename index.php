@@ -1,4 +1,5 @@
 <?php
+use LDAP\Result;
 header("Ace-Access-Control-Allow-Origin: *"); //permite que o script seja executado em qualquer domínio
 $host = "localhost";
 $user = "root";
@@ -290,13 +291,16 @@ function pegarId()
         $sql = "SELECT * FROM motoristas WHERE id = $id";
         $response = $connection->query($sql);
         $rows = array();
+        //pega o modelo do veiculo conforme o veiculo_id do motorista
+        $sql = "SELECT veiculo.modelo FROM veiculo WHERE id = (SELECT veiculo_id FROM motoristas WHERE id = $id)";
+        $result = $connection->query($sql)->fetch_assoc()['modelo'];
 
         //Verifica se há motoristas com o id informado
         if ($response->num_rows > 0) {
             foreach ($response as $r) { //Percorre o array de motoristas
                 $rows = $r;
             }
-            echo json_encode($rows);
+            echo json_encode(["rows" => $rows, "veiculo" => $result]);
         } else {
             echo json_encode(["message" => "Nenhum motorista encontrado com esse id"]);
         }
