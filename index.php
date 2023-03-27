@@ -241,14 +241,14 @@ function addMotorista()
 
             // Executa a query
             $result = $connection->query($sql);
-            //seleciona o id do motorista cadastrado
+            //select o id do motorista cadastrado
             $id = $connection->query("SELECT id FROM motoristas WHERE cpf = '$cpf'")->fetch_assoc()['id']; //fetch_assoc() retorna um array associativo
 
             if (!$result) {
-                echo json_encode(["message" => "Erro ao cadastrar motorista"]);
+                echo json_encode(["message" => "Erro ao cadastrar motorista", "flag" => true]);
             } else {
                 // Exibe uma mensagem de sucesso e o id do usuário
-                echo json_encode(["message" => "Motorista cadastrado com sucesso", "id" => $id, "veiculo" => $idVeiculo]);
+                echo json_encode(["message" => "Motorista cadastrado com sucesso", "id" => $id, "veiculo" => $idVeiculo, "flag" => false]);
             }
 
         }

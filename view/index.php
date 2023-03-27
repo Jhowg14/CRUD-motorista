@@ -10,7 +10,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
 <html>
 
 <head>
-    <meta charset="utf-8">
+    <meta charsettituloModal="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motoristas</title>
@@ -59,9 +59,8 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                             <div class="col-md-6">
                                 <label class="form-label">Veiculo<span style="color:red">*</span></label>
                                 <!--fazer select de veiculos-->
-                                <select class="form-control" id="veiculo" type="text">
+                                <select class="form-control" id="veiculo" data-placeholder='Nenhum valor selecionado...'>>
                                     <!--chama funcao para listar veiculos-->
-                                    <option value="">Selecione um veiculo</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -90,9 +89,9 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 src="http://localhost:80/GlobalDotCom//img/logo.jpg" style="display: block; margin: auto;"
                 height="100"></a>
     </div>
-    <div id="nomeEmitir ">
+    <div id="nomeEmitir" style="display: none;">
         <h3 class="text-center" style="font-size:19px;
-    text-align:center ;">Bem vindo, <?php echo $_SESSION['nome']; ?></h3>
+    text-align:center ;">Bem vindo(a), <?php echo $_SESSION['nome']; ?></h3>
     </div>
     <div class='container p-3'>
         <!-- Botão para acionar modal -->
@@ -113,6 +112,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
         <table id='myTable' class='table table-bordered'>
             <thead class='thead-dark'>
                 <tr>
+                    <th aria-controls="none" class="" aria-sort="none" style="text-align: center">Foto</t>
                     <th scope='col' style='text-align: center'>Nome</th>
                     <th scope='col' style='text-align: center'>CPF</th>
                     <th scope='col' style='text-align: center'>Endereço</th>
@@ -122,7 +122,9 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     <th scope='col' style='text-align: center'>Excluir</th>
                 </tr>
             </thead>
-            <tbody id="listarUsuario">
+            <tbody id="listarUsuario" style="tbody tr:nth-child(even){
+                                                background-color: #4e7eac;
+                                            }">
             </tbody>
         </table>
     </div>
@@ -157,13 +159,35 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     event.preventDefault();//não deixa digitar
                 }
             });
+            $("#nomeEmitir").slideDown(2000);
+            //$("#logo").slideUp(1000);
+            $("#myTable").DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "Nenhum registro encontrado",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Nenhum registro disponível",
+                    "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                    "search": "Pesquisar:",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Próximo"
+                    }
+                }
+            });
         });
         //funcao que adiciona veiculo
         function addVeiculo() {
             Swal.fire({
                 title: 'Adicionar veiculo',
-                html: '<input id="modelo" class="swal2-input" style="heigth:2em;" placeholder="Modelo">' +
-                    '<input id="ano" class="swal2-input" placeholder="Ano">' +
+                html: '<select id="select" class="swal2-input" placeholder="Selecione um veiculo">' +
+                    '<option value="Trator">Trator</option>' +
+                    '<option value="Caminhao">Caminhao</option>' +
+                    '<option value="Guindaste">Guindaste</option>'+
+                    '<option value="Empilhadeira">Empilhadeira</option>'+
+                    '<option value="Guincho">Guincho</option>'+
+                    '</select>' +
+                    '<input type="month" id="ano" class="swal2-input" placeholder="Ano">' +
                     '<input id="marca" class="swal2-input" placeholder="Marca">' +
                     '<input id="placa" class="swal2-input" placeholder="Placa">',
                 showCancelButton: true,
@@ -173,7 +197,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 //diminuir o tamanho do modal
                 width: 400,
                 preConfirm: () => {
-                    const modelo = Swal.getPopup().querySelector('#modelo').value
+                    const modelo = Swal.getPopup().querySelector('#select').value
                     const ano = Swal.getPopup().querySelector('#ano').value
                     const marca = Swal.getPopup().querySelector('#marca').value
                     const placa = Swal.getPopup().querySelector('#placa').value
@@ -216,7 +240,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 $("#veiculo option").remove();
                 $("#veiculo").append("<option value='0'>Selecione um veiculo</option>");
                 for (var i = 0; i < response.length; i++) {
-                    $("#veiculo").append("<option value='" + response[i].id + "'>" + response[i].modelo + " " + response[i].placa + "</option>");
+                    $("#veiculo").append("<option value="+response[i].id+">"+ response[i].modelo +" "+ response[i].placa + "</option>");
                 }
             });
         }
@@ -249,8 +273,11 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 //adicinoar no datatable os registros
                 for (var i = 0; i < response.length; i++) {
                     //$("#listarUsuario").append("<tr id='line_"+response[i].id+"'><th>"+response[i].nome+"</th><td>"+response[i].cpf+"</td><td>"+response[i].endereco+"</td><td>"+response[i].veiculo+"</td><td>"+response[i].telefone+"</td><td><button class='btn btn-success' onclick='getId("+response[i].id+")'>Editar</button></td><td><button class='btn btn-danger' onclick='remove("+response[i].id+")'>Excluir</button></td></tr>");
+                    //chama funçao que verifica o modelo do veiculo
                     //colocar id em cada linha
                     $("#myTable").DataTable().row.add([
+                        //coloca imagem do veiculo
+                        `<img src='http://localhost:80/GlobalDotCom/img/${response[i].modelo}.png' style='width: 80px; height: 60px;margin:0'>`,
                         `<b>${response[i].nome}</b>`,
                         response[i].cpf,
                         response[i].endereco,
@@ -260,7 +287,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                         "<button class='btn btn-success' onclick='getId(" + response[i].id + ")'>Editar</button>",
                         "<button class='btn btn-danger' onclick='remove(" + response[i].id + ")'>Excluir</button></tr>"
                     ]).draw().node().id = "line_" + response[i].id;//node pega o elemento html
-                    console.log(response[i].modelo);
+                    //console.log(response[i].modelo);
                 }
 
                 // Chamar a função novamente para exibir os próximos registros
@@ -368,9 +395,10 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 },
                 dataType: 'json'
             }).done(function (response) {
+                console.log(response.flag)
                 //adicona o novo usuário na tela sem precisar atualizar a página
-                var $id = response.id;
-
+                
+                
                 $("#nome").val("");
                 $("#cpf").val("");
                 $("#endereco").val("");
@@ -384,16 +412,18 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 Swal.fire(response.message);
                 //se tiver algum campo vazio ou cpf já cadastrado, não adiciona se ja tiver cpf cadastrado, não adiciona
                 //fechar modal
-                if (nomeAdd != "" && cpfAdd != "" && enderecoAdd != "" && veiculoAdd != "" && telefoneAdd != "" && response.flag != true) {
+                if (nomeAdd != "" && cpfAdd != "" && enderecoAdd != "" && veiculoAdd != "" && telefoneAdd != "" && response.flag != true){
+                    
                     //adiciona o novo usuário na tela sem precisar atualizar a página
                     $("#myTable").DataTable().row.add([
+                        `<img src='http://localhost:80/GlobalDotCom/img/${response.veiculo['modelo']}.png' style='width: 80px; height: 60px;margin:0'>`,
                         `<b>${nomeAdd}</b>`,
                         cpfAdd,
                         enderecoAdd,
                         `${response.veiculo['modelo']}<span style=' font-size :80%; padding: 4px;text-align: right; float: right' class='fa fa-eye' onclick='getVeiculo(${response.veiculo['id']})'></span>`,
                         telefoneAdd,
-                        "<button class='btn btn-success' onclick='getId(" + $id + ")'>Editar</button>",
-                        "<button class='btn btn-danger' onclick='remove(" + $id + ")'>Excluir</button></tr>"
+                        "<button class='btn btn-success' onclick='getId(" + response.id + ")'>Editar</button>",
+                        "<button class='btn btn-danger' onclick='remove(" + response.id+ ")'>Excluir</button></tr>"
                     ]).draw().node().id = "line_" + $id;
                     $("#completeModal").modal("hide");
                 }
@@ -407,6 +437,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
         function openModal() {
             //alterar titulo do modal
             $("#botaoModal").text("Cadastrar").attr("onclick", "createUser()");
+            $("#tituloModal").text("Cadastrar Usuário");
             getVeiculos();
             $("#cpf").css("border-color", "#CCC");
             $("#telefone").css("border-color", "#CCC");
@@ -414,7 +445,6 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
             $("#nome").val("");
             $("#cpf").val("");
             $("#endereco").val("");
-            //colocar o select na primeira opção
             $("#veiculo").val("");
             $("#telefone").val("");
             $("#completeModal").modal("show");
@@ -425,7 +455,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
         function validarCPF(cpf) {
             $("#cpf").css("border-color", "#CCC");
             $("#telefone").css("border-color", "#CCC");
-            cpf = cpf.replace(/[^\d]+/g, '');
+            cpf = cpf.replace(/[^\d]+/g,'');//remove tudo que não é dígito
             if (cpf.length != 11 && cpf.length != 14) {
                 $("#cpf").css("border-color", "red");
                 return false;
@@ -534,7 +564,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
 
                     var userid = JSON.parse(data);
                     getVeiculos();
-                    //console.log(userid);
+                    console.log(userid);
                     $("#id").val(id);
                     $("#tituloModal").text("Editar Motorista");
                     //mudar o botão de cadastrar para editar e mudar a função do botão
@@ -542,7 +572,8 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     $("#nome").val(userid.nome);
                     $("#cpf").val(userid.cpf);
                     $("#endereco").val(userid.endereco);
-                    $("#veiculo").val(userid.veiculo_id);
+                    //slecionar o id do veiculo no select 
+                    $("#veiculo").val("3");
                     $("#telefone").val(userid.telefone);
                     $("#completeModal").modal("show");
                 });
@@ -581,7 +612,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 , function (data, status) {
 
                     var response = JSON.parse(data);
-                    console.log(response);
+                    //console.log(response);
                     Swal.fire(response.message);
                     //se algum campo nao foi preenchiado, nao adiciona
                     if (nome == "" || cpf == "" || endereco == "" || telefone == "" || veiculo == "") {
@@ -591,6 +622,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     var row = $('#myTable').DataTable().row("#line_" + id);
                     // Atualiza os dados da linha
                     row.data([
+                        `<img src='http://localhost:80/GlobalDotCom/img/${response.Veiculo['modelo']}.png' style='width: 80px; height: 60px;margin:0'>`,
                         `<b>${nome}</b>`,
                         cpf,
                         endereco,
