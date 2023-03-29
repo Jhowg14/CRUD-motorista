@@ -49,10 +49,14 @@ switch ($_POST['funcao']) { //switch() é uma estrutura de controle de fluxo que
     case 'cadastrarVeiculo':
         cadastrarVeiculo();
         break;
+    case 'trocaSenha':
+        trocaSenha();
+        break;
     default:
         echo json_encode(['message' => 'Ação não definida.']);
         break;
 }
+
 //funcao para cadastrar veiculo
 function cadastrarVeiculo()
 {
@@ -348,7 +352,7 @@ function login()
     global $connection;
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-
+    
     if (empty($email) || empty($senha)) {
         echo json_encode(["message" => "Todos os campos são obrigatórios"]);
     } else {
@@ -364,16 +368,48 @@ function login()
 
                 echo json_encode(["message" => "Usuário ou senha inválidos", "flag" => true]);
             } else {
-                // Inicia a sessão
                 session_start();
                 $_SESSION['id'] = $row_usuario['id'];
                 $_SESSION['nome'] = $row_usuario['nome'];
                 $_SESSION['email'] = $row_usuario['email'];
 
+                if(easyPassword($email, $senha)){
+                    echo json_encode(["message" => "Senha fraca, altere-a", "senhaFraca" => true]);
+                }else{
+                // Inicia a sessão
+                
                 echo json_encode(["message" => "Login efetuado com sucesso", "dados" => $row_usuario, "flag" => false]);
+                }
             }
         }
     }
+}
+
+#troca a senha do usuário
+function trocaSenha(){
+    global $connection;
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    $query = "SELECT * FROM login_motorista WHERE email = '$email'";
+    $result = $connection -> query($query);
+    $row = $result -> fetch_assoc();
+    
+    if(password_verify($senha, $row['senha'])){
+        echo json_encode(["message" => "Senha igual a anterior, altere-a", "senhaFraca" => true]);
+    }else{
+        if(easyPassword($email, $senha)){
+            echo json_encode(["message" => "Senha fraca altere para outra", "senhaFraca" => true]);
+        }else{
+            $senha = password_hash($senha, PASSWORD_DEFAULT);
+            $query = "UPDATE login_motorista SET senha = '$senha' WHERE email = '$email'";
+            $result = $connection -> query($query);
+            if($result){
+                echo json_encode(["message" => "Senha alterada com sucesso", "flag" => false]);
+            }else{
+                echo json_encode(["message" => "Erro ao alterar senha", "flag" => true]);
+            }
+        }
+  }
 }
 function logout()
 {
@@ -410,4 +446,15 @@ function cadastrar()
     }
 }
 #emitir dados quem está logado
+
+#funcao para verificar se a senha é fraca
+function easyPassword($email, $senha){
+    //se a senha for igual ao 123456 ou ao email, retorna erro
+    if($senha == '123456' || $senha == $email || $senha == "admin" || $senha =="admin123"){
+        return true;
+    }else{
+        return false;
+    }
+}
 ?>
+

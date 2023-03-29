@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
+if (!isset($_SESSION['email'])) {
     header('Location: http://localhost:80/GlobalDotCom/www.gaussfleet.com/index.html');
     exit;
 }
@@ -160,7 +160,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     event.preventDefault();//não deixa digitar
                 }
             });
-            $("#nomeEmitir").slideDown(2000);
+            $("#nomeEmitir").slideDown(1000);
             //$("#logo").slideUp(1000);
             $("#myTable").DataTable({
                 "language": {
@@ -181,14 +181,14 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
         function addVeiculo() {
             Swal.fire({
                 title: 'Adicionar veiculo',
-                html:'<select id="select" class="swal2-input">' +
+                html:'<select id="selecte" class="swal2-input">' +
                     '<option value="Trator">Trator</option>' +
                     '<option value="Caminhao">Caminhao</option>' +
                     '<option value="Guindaste">Guindaste</option>'+
                     '<option value="Empilhadeira">Empilhadeira</option>'+
                     '<option value="Guincho">Guincho</option>'+
                     '</select>' +
-                    '<input type="month" id="ano" class="swal2-input" placeholder="Ano">' +
+                    '<input type="number" id="ano" class="swal2-input" placeholder="Ano">' +
                     '<input id="marca" class="swal2-input" placeholder="Marca">' +
                     '<input id="placa" class="swal2-input" placeholder="Placa">',
                 showCancelButton: true,
@@ -198,7 +198,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 //diminuir o tamanho do modal
                 width: 400,
                 preConfirm: () => {
-                    const modelo = Swal.getPopup().querySelector('#select').value
+                    const modelo = Swal.getPopup().querySelector('#selecte').value
                     const ano = Swal.getPopup().querySelector('#ano').value
                     const marca = Swal.getPopup().querySelector('#marca').value
                     const placa = Swal.getPopup().querySelector('#placa').value
@@ -329,8 +329,7 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                 success: function (data) {
 
                     currentPage = paginaAdd;
-                    read(0, data, 2);
-
+                    read(0, data, 5);
                 }
             });
         }
@@ -457,10 +456,10 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
             $("#cpf").css("border-color", "#CCC");
             $("#telefone").css("border-color", "#CCC");
             cpf = cpf.replace(/[^\d]+/g,'');//remove tudo que não é dígito
-            if (cpf.length != 11 && cpf.length != 14) {
+            /*if (cpf.length != 11 && cpf.length != 14) {
                 $("#cpf").css("border-color", "red");
                 return false;
-            } // o CPF deve ter 11 ou 14 dígitos
+            } */// o CPF deve ter 11 ou 14 dígitos
             /*if (cpf.length == 14) {// remove a máscara do CPF com 14 dígitos
                 // remove a máscara do CPF com 14 dígitos
                 cpf = cpf.replace(/\./g, '').replace('-', '');
@@ -576,7 +575,8 @@ if (!isset($_SESSION['id']) && !isset($_SESSION['nome'])) {
                     $("#endereco").val(userid.endereco);
                     //selecionar a option do id do veiculo  
                     //seleciona a option do id do veiculo
-                    $("#veiculo").val(userid.veiculo_id);
+                    $("#veiculo option[value=" + userid.veiculo + "]").attr("selected", "selected");
+                    //$("#veiculo" option:selected).val(userid.veiculo_id);
                     $("#telefone").val(userid.telefone);
                     $("#completeModal").modal("show");
                 });
