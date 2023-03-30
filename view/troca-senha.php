@@ -547,21 +547,23 @@ function trocaSenha(){
 <section class="ftco-section">
 <div class="container"  style="display:flex; justify-content: center; align-items: center; height: 80vh;">
 <div class="row justify-content-center">
-
+<fieldset style="border:2px solid #CCC; padding: 20px;">
 <div class="col-md-0 mb-5">
   <h2 class="heading-section">Troca de senha</h2>
-<form id="loginForm" class="login-form">
+<form id="loginForm" class="login-form" autocomplete="off">
   <div class="form-group">
     <label for="exampleInputEmail1">Digite o email de login</label>
-    <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" placeholder="Seu email">
+    <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp" disabled="disabled" placeholder="Seu email" autocomplete="off">
     <small id="emailHelp" class="form-text text-muted">Nunca vamos compartilhar seu email, com ninguém.</small>
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Senha</label>
+    <input type="password" class="form-control" id="loginPassword" placeholder="Senha" autocomplete="off">
+    <!--<label for="exampleInputPassword1">Confirmar senha</label>
+    <input type="password" class="form-control" id="loginPassword" placeholder="Senha" autocomplete="off">
+    --><div class="alert" role="alert" id="alertaSenha" style="display: none; margin: 3px"></div>
     <!-- alerta de senha incorreta -->
     
-    <input type="password" class="form-control" id="loginPassword" placeholder="Senha">
-    <div class="alert" role="alert" id="alertaSenha" style="display: none; margin: 3px"></div>
   </div>
   <div class="form-group form-check">
     <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -570,6 +572,7 @@ function trocaSenha(){
   <button id="botao" class="btn btn-primary" onclick="trocaSenha()">Enviar</button>
 </form>
 </div>
+</fieldset>
 </div>
 </div>
 </section>
@@ -581,6 +584,14 @@ function trocaSenha(){
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     
 <script>
+
+$(document).ready(function () {
+   // Usando um pequeno delay de 100ms porque às vezes o navegador preenche o campo logo que o documento está pronto, e pode não funcionar como esperado
+   setTimeout(function(){
+     $('#loginEmail').removeAttr('disabled');
+
+   }, 100);
+});
 //nao recarregar ao submeter o formulario
 $("#loginForm").submit(function(e) {
     e.preventDefault();
@@ -606,7 +617,7 @@ function trocaSenha(){
     if(data.senhaFraca == true || data.flag == true){
       $("#alertaSenha").attr("class", "alert alert-danger").text(data.message).show();
     }else{
-      $("#alertaSenha").attr("class", "alert alert-success").text(data.message).show();
+      //$("#alertaSenha").attr("class", "alert alert-success").text(data.message).show();
       $(location).attr('href','http://localhost:80/GlobalDotCom/view/index.php');
     }
   }

@@ -390,26 +390,44 @@ function trocaSenha(){
     global $connection;
     $email = $_POST['email'];
     $senha = $_POST['senha'];
-    $query = "SELECT * FROM login_motorista WHERE email = '$email'";
-    $result = $connection -> query($query);
-    $row = $result -> fetch_assoc();
-    
-    if(password_verify($senha, $row['senha'])){
-        echo json_encode(["message" => "Senha igual a anterior, altere-a", "senhaFraca" => true]);
+
+    if(empty($email) || empty($senha)){
+        echo json_encode(["message" => "Todos os campos são obrigatórios", "flag" => true]);
     }else{
-        if(easyPassword($email, $senha)){
-            echo json_encode(["message" => "Senha fraca altere para outra", "senhaFraca" => true]);
+        $query = "SELECT * FROM login_motorista WHERE email = '$email'";
+        $result = $connection -> query($query);
+        $row = $result -> fetch_assoc();
+        
+        if(password_verify($senha, $row['senha'])){
+            echo json_encode(["message" => "Senha igual a anterior, altere-a", "senhaFraca" => true]);
+        }
+        elseif($result->num_rows == 0){
+            echo json_encode(["message" => "Usuário não encontrado", "flag" => true]);
         }else{
-            $senha = password_hash($senha, PASSWORD_DEFAULT);
-            $query = "UPDATE login_motorista SET senha = '$senha' WHERE email = '$email'";
-            $result = $connection -> query($query);
-            if($result){
-                echo json_encode(["message" => "Senha alterada com sucesso", "flag" => false]);
+            if(easyPassword($email, $senha)){
+                echo json_encode(["message" => "Senha fraca, altere para outra", "senhaFraca" => true]);
             }else{
-                echo json_encode(["message" => "Erro ao alterar senha", "flag" => true]);
+                $senha = password_hash($senha, PASSWORD_DEFAULT);
+                $query = "UPDATE login_motorista SET senha = '$senha' WHERE email = '$email'";
+                $result = $connection -> query($query);
+                if($result){
+                    session_start();
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['nome'] = $row['nome'];
+
+                    echo json_encode(["message" => "Senha alterada com sucesso", "flag" => false]);
+                    //direciona para a página de logi
+                    // se o login for bem-sucedido, redirecione para a página de destino
+                    /*ob_start();
+                    header('Location: GlobalDotCom/view/index.php');
+                    ob_end_flush();*/
+
+                }else{
+                    echo json_encode(["message" => "Erro ao alterar senha", "flag" => true]);
+                }
             }
         }
-  }
+    }
 }
 function logout()
 {
