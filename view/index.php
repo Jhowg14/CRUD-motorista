@@ -4,6 +4,10 @@ if (!isset($_SESSION['email'])) {
     header('Location: http://localhost:80/GlobalDotCom/www.gaussfleet.com/index.html');
     exit;
 }
+if ($_COOKIE['respondeu'] != 'sim') {
+    header('Location: http://localhost:80/GlobalDotCom/view/troca-senha.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -308,7 +312,6 @@ if (!isset($_SESSION['email'])) {
                     Swal.fire({
                         title: 'Veiculo',
                         html: `<b>Modelo:</b> ${data.modelo}<br><b>Placa:</b> ${data.placa}<br><b>Marca:</b> ${data.marca}<br><b>Ano:</b> ${data.ano}`,
-                        icon: '<img src="https://img.icons8.com/color/48/000000/car.png"/>',
                         confirmButtonText: 'Ok'
                     });
                 }

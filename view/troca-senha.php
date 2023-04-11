@@ -611,6 +611,7 @@ function trocaSenha(){
     dataType: "json",
     success: function (data) {
       console.log(data);
+      
     $("#loginForm").submit(function(e) {
       e.preventDefault();
     });

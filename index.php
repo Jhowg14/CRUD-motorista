@@ -414,7 +414,7 @@ function trocaSenha(){
                     session_start();
                     $_SESSION['email'] = $row['email'];
                     $_SESSION['nome'] = $row['nome'];
-
+                    setcookie('respondeu', 'sim', time()+3600);
                     echo json_encode(["message" => "Senha alterada com sucesso", "flag" => false]);
                     //direciona para a página de logi
                     // se o login for bem-sucedido, redirecione para a página de destino
